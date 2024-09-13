@@ -35,8 +35,8 @@ export function Navbar() {
   const { colorMode } = useColorMode();
   return (
     <Box py="30px" px={{ base: "20px", lg: "50px" }}>
-      <Flex direction="row" justifyContent="space-between">
-        <Box my="auto">
+      <Flex direction="row" alignItems="center" justifyContent="space-between">
+        <Flex alignItems="center" gap={4}>
           <Heading
             as={Link}
             href="/"
@@ -46,20 +46,34 @@ export function Navbar() {
           >
             YourDiamonds DDC
           </Heading>
+          <Flex display={{ lg: "flex", base: "none" }} alignItems="center" gap={4}>
+            {["Portfolio", "Search", "Mint"].map((item) => (
+              <Button
+                key={item}
+                as={Link}
+                href={item === "Portfolio" ? "/profile" : "#"}
+                variant="outline"
+                height="56px"
+                px={4}
+              >
+                {item}
+              </Button>
+            ))}
+          </Flex>
+        </Flex>
+        <Flex alignItems="center" gap={4}>
+          <ConnectButton
+            client={client}
+            connectModal={{
+              size: "wide"
+            }}
+            theme={colorMode}
+            connectButton={{ style: { height: "56px" } }}
+          />
+        </Flex>
+        <Box display={{ lg: "none", base: "block" }}>
+          <SideMenu />
         </Box>
-        <Box display={{ lg: "block", base: "none" }}>
-
-            <ConnectButton
-              client={client}
-              connectModal={{
-                size: "wide"
-              }}
-              theme={colorMode}
-              connectButton={{ style: { height: "56px" } }}
-            />
-          
-        </Box>
-        <SideMenu />
       </Flex>
     </Box>
   );
