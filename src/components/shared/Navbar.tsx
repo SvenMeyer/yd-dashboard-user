@@ -41,25 +41,23 @@ export function Navbar() {
             as={Link}
             href="/"
             _hover={{ textDecoration: "none" }}
-            bgGradient="linear(to-l, #7928CA, #FF0080)"
-            bgClip="text"
+            color="inherit"
             fontWeight="extrabold"
           >
-            {/* Replace this with your own branding */}
-            THIRDMART
+            YourDiamonds DDC
           </Heading>
         </Box>
         <Box display={{ lg: "block", base: "none" }}>
-          <ToggleThemeButton />
-          {account && wallet ? (
-            <ProfileButton address={account.address} wallet={wallet} />
-          ) : (
+
             <ConnectButton
               client={client}
+              connectModal={{
+                size: "wide"
+              }}
               theme={colorMode}
               connectButton={{ style: { height: "56px" } }}
             />
-          )}
+          
         </Box>
         <SideMenu />
       </Flex>
