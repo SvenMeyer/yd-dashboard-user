@@ -28,11 +28,20 @@ import {
 } from "thirdweb/react";
 import type { Wallet } from "thirdweb/wallets";
 import { SideMenu } from "./SideMenu";
+import { usePathname } from 'next/navigation';
+
+const menuItems = [
+  { label: "Portfolio", href: "/profile" },
+  { label: "Search", href: "/search" },
+  { label: "Mint", href: "/mint" }
+];
 
 export function Navbar() {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const { colorMode } = useColorMode();
+  const pathname = usePathname();
+
   return (
     <Box py="30px" px={{ base: "20px", lg: "50px" }}>
       <Flex direction="row" alignItems="center" justifyContent="space-between">
@@ -47,16 +56,20 @@ export function Navbar() {
             YourDiamonds DDC
           </Heading>
           <Flex display={{ lg: "flex", base: "none" }} alignItems="center" gap={4}>
-            {["Portfolio", "Search", "Mint"].map((item) => (
+            {menuItems.map((item) => (
               <Button
-                key={item}
+                key={item.label}
                 as={Link}
-                href={item === "Portfolio" ? "/profile" : "#"}
+                href={item.href}
                 variant="outline"
                 height="56px"
                 px={4}
+                bg={pathname === item.href ? "gray.100" : "transparent"}
+                _hover={{
+                  bg: pathname === item.href ? "gray.200" : "gray.100"
+                }}
               >
-                {item}
+                {item.label}
               </Button>
             ))}
           </Flex>
