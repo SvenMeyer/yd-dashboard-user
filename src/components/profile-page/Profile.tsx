@@ -32,6 +32,8 @@ import { getOwnedERC1155s } from "@/extensions/getOwnedERC1155s";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useGetENSAvatar } from "@/hooks/useGetENSAvatar";
 import { useGetENSName } from "@/hooks/useGetENSName";
+import { balanceOf } from "thirdweb/extensions/erc721";
+import { getOwnedNFTs } from "thirdweb/extensions/erc721";
 
 type Props = {
   address: string;
@@ -53,21 +55,31 @@ export function ProfileSection(props: Props) {
     client,
   });
 
+  console.log("Contract:", contract);
+
+  console.log("Address:", address);
+
   const {
     data,
     error,
     isLoading: isLoadingOwnedNFTs,
   } = useReadContract(
-    selectedCollection.type === "ERC1155" ? getOwnedERC1155s : getOwnedERC721s,
+    selectedCollection.type === "ERC1155" ? getOwnedERC1155s : getOwnedNFTs,
     {
       contract,
       owner: address,
-      requestPerSec: 50,
       queryOptions: {
         enabled: !!address,
+        retry: false, // Disable automatic retries
       },
     }
   );
+
+  console.log("useReadContract result:", { data, error, isLoadingOwnedNFTs });
+
+  if (error) {
+    console.error("Error fetching owned NFTs:", error);
+  }
 
   const chain = contract.chain;
   const marketplaceContractAddress = MARKETPLACE_CONTRACTS.find(
@@ -93,6 +105,15 @@ export function ProfileSection(props: Props) {
       )
     : [];
   const columns = useBreakpointValue({ base: 1, sm: 2, md: 2, lg: 2, xl: 4 });
+
+  const { data: nftBalance, isLoading: isLoadingBalance } = useReadContract(
+    balanceOf,
+    {
+      contract,
+      owner: address,
+    }
+  );
+
   return (
     <Box px={{ lg: "50px", base: "20px" }}>
       <Flex direction={{ lg: "row", md: "column", sm: "column" }} gap={5}>
@@ -116,6 +137,10 @@ export function ProfileSection(props: Props) {
           <Box>
             <Text>Loading...</Text>
           </Box>
+        ) : error ? (
+          <Box>
+            <Text>Error loading NFTs. Please try again later.</Text>
+          </Box>
         ) : (
           <>
             <Box>
@@ -127,7 +152,7 @@ export function ProfileSection(props: Props) {
                   defaultIndex={0}
                 >
                   <TabList>
-                    <Tab>Owned ({data?.length})</Tab>
+                    <Tab>Owned ({nftBalance?.toString() ?? "0"})</Tab>
                     <Tab>Listings ({listings.length || 0})</Tab>
                     {/* <Tab>Auctions ({allAuctions?.length || 0})</Tab> */}
                   </TabList>

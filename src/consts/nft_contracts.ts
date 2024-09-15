@@ -17,6 +17,16 @@ export type NftContract = {
  * This list could also be dynamically fetched from a data source
  */
 export const NFT_CONTRACTS: NftContract[] = [
+
+  {
+    address: "0x8c11e104DAf21d4A6faEFfec36BCa3310ACC9D6F",
+    chain: sepolia,
+    title: "YourDiamonds DDC (sepolia-8c11)",
+    thumbnailUrl:
+      "https://yourdiamonds.com/wp-content/uploads/2022/05/42-1920.jpg",
+    type: "ERC721",
+  },
+
   {
     address: "0x19f46d5d67183b8496161af451f00e0f2d4bc161",
     chain: sepolia,

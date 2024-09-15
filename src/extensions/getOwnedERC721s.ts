@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO, type NFT, type BaseTransactionOptions } from "thirdweb";
+import { ZERO_ADDRESS, type NFT, type BaseTransactionOptions } from "thirdweb";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { detectMethod } from "thirdweb/utils";
 
@@ -139,7 +139,7 @@ export async function getOwnedERC721s(
 	} else {
 		const owners = await Promise.all(
 			allTokenIds.map((tokenId) =>
-				ownerOf({ contract, tokenId }).catch(() => ADDRESS_ZERO),
+				ownerOf({ contract, tokenId }).catch(() => ZERO_ADDRESS),
 			),
 		);
 
