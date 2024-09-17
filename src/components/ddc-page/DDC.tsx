@@ -1,16 +1,31 @@
 import Image from 'next/image'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ethers } from "ethers"; // Assuming ethers is imported somewhere in the project
 
 type DiamondProperties = {
-  microCarat?: string;
-  colorGrade?: string;
-  clarityGrade?: string;
-  cutGrade?: string;
-  fluorescence?: string;
-  polishGrade?: string;
-  symmetryGrade?: string;
-  // ... (keep other existing properties)
+  reportDate?: string
+  reportNumber?: string
+  shape?: string
+  measurements?: [number, number, number]
+  caratWeight?: number
+  colorGrade?: string
+  clarityGrade?: string
+  cutGrade?: string
+  polish?: string
+  symmetry?: string
+  fluorescence?: string
+  inscriptions?: string
+  comments?: string
+  source?: string
+  totalDepth?: number
+  tableDiameter?: number
+  pavilionDepth?: number
+  pavilionAngle?: number
+  crownHeight?: number
+  crownAngle?: number
+  girdlePercentage?: number
 }
+
 
 type NFTProperties = {
   id: string
@@ -20,12 +35,36 @@ type NFTProperties = {
 }
 
 const defaultProperties: DiamondProperties = {
-  // ... (keep existing default properties)
+  reportDate: 'January 01, 2014',
+  reportNumber: '2141438167',
+  shape: 'Round Brilliant',
+  measurements: [6.41, 6.43, 3.97],
+  caratWeight: 1.01,
+  colorGrade: 'F',
+  clarityGrade: 'SI1',
+  cutGrade: 'Excellent',
+  polish: 'Excellent',
+  symmetry: 'Excellent',
+  fluorescence: 'None',
+  inscriptions: 'I Love You',
+  comments: '**SAMPLE**',
+  source: 'Natural Diamond',
+  totalDepth: 58.9,
+  tableDiameter: 67,
+  pavilionDepth: 43.5,
+  pavilionAngle: 41.9,
+  crownHeight: 12,
+  crownAngle: 38.5,
+  girdlePercentage: 3.7
 }
 
 const defaultNFTProperties: NFTProperties = {
-  // ... (keep existing default NFT properties)
+  id: 'IGI-12345678',
+  creationDateTime: '1 Jan 2025 - 12:00:00 UTC',
+  blockchain: 'zkSync',
+  mintTransactionId: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 }
+
 
 const defaultImageLink = "https://4cs.gia.edu/wp-content/uploads/2024/07/02_Cut-GradingScale_960x800.jpg"
 
@@ -65,19 +104,17 @@ export default function DiamondPropertiesComponent({
             className="w-full h-auto"
           />
         </div>
+
         <div className="border border-gray-300 p-4 order-3 md:order-2">
           <h2 className="text-2xl font-light mb-4 text-gray-700 pl-2">DDC NFT Properties</h2>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-1/2 text-left font-bold text-gray-600 py-1">Property</TableHead>
-                <TableHead className="w-1/2 text-left font-bold text-gray-600 py-1">Value</TableHead>
-              </TableRow>
+
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="font-light py-1">ID</TableCell>
-                <TableCell className="py-1">{nftProperties.id}</TableCell>
+                <TableCell className="w-1/2 text-left font-bold text-gray-600 py-1">DDC Id</TableCell>
+                <TableCell className="w-1/2 text-left font-bold text-gray-600 py-1">{ethers.decodeBytes32String(nftProperties.id)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-light py-1">Creation date / time</TableCell>
@@ -95,45 +132,32 @@ export default function DiamondPropertiesComponent({
           </Table>
         </div>
       </div>
+
       <div className="w-full md:w-1/2 order-2 md:order-2">
         <div className="border border-gray-300 p-4">
           <h2 className="text-2xl font-light mb-4 text-gray-700 pl-2">Diamond Grading Report Data</h2>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-1/2 text-left font-bold text-gray-600 py-1">Property</TableHead>
-                <TableHead className="w-1/2 text-left font-bold text-gray-600 py-1">Value</TableHead>
-              </TableRow>
+
             </TableHeader>
             <TableBody>
-              {renderPropertyRow('microCarat', mergedProperties.microCarat)}
-              {renderPropertyRow('colorGrade', mergedProperties.colorGrade)}
-              {renderPropertyRow('clarityGrade', mergedProperties.clarityGrade)}
-              {renderPropertyRow('cutGrade', mergedProperties.cutGrade)}
-              {renderPropertyRow('fluorescence', mergedProperties.fluorescence)}
-              {renderPropertyRow('polishGrade', mergedProperties.polishGrade)}
-              {renderPropertyRow('symmetryGrade', mergedProperties.symmetryGrade)}
-              <TableRow>
-                <TableCell colSpan={2} className="font-bold pt-3 pb-1">Grading Results</TableCell>
+            <TableRow>
+                <TableCell className="w-1/2 text-left font-bold text-gray-600 py-1">Report Id</TableCell>
+                <TableCell className="w-1/2 text-left font-bold text-gray-600 py-1">{ethers.decodeBytes32String(nftProperties.id)}</TableCell>
               </TableRow>
-              {renderPropertyRow('caratWeight', mergedProperties.caratWeight)}
-              {renderPropertyRow('colorGrade', mergedProperties.colorGrade)}
-              {renderPropertyRow('clarityGrade', mergedProperties.clarityGrade)}
-              {renderPropertyRow('cutGrade', mergedProperties.cutGrade)}
+              {renderPropertyRow('Carat', Number(mergedProperties.microCarat) / 1000000)}
+              {renderPropertyRow('Color', mergedProperties.colorGrade)}
+              {renderPropertyRow('Clarity', mergedProperties.clarityGrade)}
+              {renderPropertyRow('Cut', mergedProperties.cutGrade)}
+              {renderPropertyRow('Fluorescence', mergedProperties.fluorescence)}
+              {renderPropertyRow('Polish', mergedProperties.polishGrade)}
+              {renderPropertyRow('Symmetry', mergedProperties.symmetryGrade)}
               <TableRow>
                 <TableCell colSpan={2} className="font-bold pt-3 pb-1">Additional Grading Information</TableCell>
               </TableRow>
-              {renderPropertyRow('polish', mergedProperties.polish)}
-              {renderPropertyRow('symmetry', mergedProperties.symmetry)}
-              {renderPropertyRow('fluorescence', mergedProperties.fluorescence)}
               {renderPropertyRow('inscriptions', mergedProperties.inscriptions)}
               {renderPropertyRow('comments', mergedProperties.comments)}
-              <TableRow>
-                <TableCell colSpan={2} className="font-bold pt-3 pb-1">Additional Properties</TableCell>
-              </TableRow>
-              {Object.entries(mergedProperties)
-                .filter(([key]) => !['reportDate', 'reportNumber', 'shape', 'measurements', 'caratWeight', 'colorGrade', 'clarityGrade', 'cutGrade', 'polish', 'symmetry', 'fluorescence', 'inscriptions', 'comments'].includes(key))
-                .map(([key, value]) => renderPropertyRow(key, value))}
+
             </TableBody>
           </Table>
         </div>
