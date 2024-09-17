@@ -3,20 +3,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ethers } from "ethers"; // Assuming ethers is imported somewhere in the project
 
 type DiamondProperties = {
-  reportDate?: string
+  reportDate?: number
   reportNumber?: string
   shape?: string
-  measurements?: [number, number, number]
-  caratWeight?: number
-  colorGrade?: string
-  clarityGrade?: string
-  cutGrade?: string
-  polish?: string
-  symmetry?: string
-  fluorescence?: string
+  microCarat?: number
+  colorGrade?: number
+  clarityGrade?: number
+  cutGrade?: number
+  polishGrade?: number
+  symmetryGrade?: number
+  fluorescence?: number
   inscriptions?: string
   comments?: string
   source?: string
+  measurements?: [number, number, number]
   totalDepth?: number
   tableDiameter?: number
   pavilionDepth?: number
@@ -26,29 +26,33 @@ type DiamondProperties = {
   girdlePercentage?: number
 }
 
-
 type NFTProperties = {
   id: string
-  creationDateTime: string
+  creationDateTime: number
   blockchain: string
   mintTransactionId: string
 }
 
+// Add this function before the defaultProperties object
+function dateStringToUnixTimestamp(dateString: string): number {
+  return Math.floor(new Date(dateString).getTime() / 1000);
+}
+
 const defaultProperties: DiamondProperties = {
-  reportDate: 'January 01, 2014',
-  reportNumber: '2141438167',
+  reportDate: dateStringToUnixTimestamp('1 Jan 2024 00:00:00 UTC'),
+  reportNumber: 'IGI-00000000',
   shape: 'Round Brilliant',
-  measurements: [6.41, 6.43, 3.97],
-  caratWeight: 1.01,
-  colorGrade: 'F',
-  clarityGrade: 'SI1',
-  cutGrade: 'Excellent',
-  polish: 'Excellent',
-  symmetry: 'Excellent',
-  fluorescence: 'None',
+  microCarat: 1.01,
+  colorGrade: 10,
+  clarityGrade: 6,
+  cutGrade: 5,
+  polishGrade: 5,
+  symmetryGrade: 5,
+  fluorescence: 1,
   inscriptions: 'I Love You',
   comments: '**SAMPLE**',
   source: 'Natural Diamond',
+  measurements: [6.41, 6.43, 3.97],
   totalDepth: 58.9,
   tableDiameter: 67,
   pavilionDepth: 43.5,
@@ -59,12 +63,11 @@ const defaultProperties: DiamondProperties = {
 }
 
 const defaultNFTProperties: NFTProperties = {
-  id: 'IGI-12345678',
-  creationDateTime: '1 Jan 2025 - 12:00:00 UTC',
+  id: 'IGI-00000000',
+  creationDateTime: dateStringToUnixTimestamp('1 Jan 2024 00:00:00 UTC'),
   blockchain: 'zkSync',
   mintTransactionId: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 }
-
 
 const defaultImageLink = "https://4cs.gia.edu/wp-content/uploads/2024/07/02_Cut-GradingScale_960x800.jpg"
 
