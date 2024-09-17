@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ethers } from "ethers"; // Assuming ethers is imported somewhere in the project
+import { reverseMappingDiamondProperties } from '../../utils/property-mapping';
 
 type DiamondProperties = {
   reportDate?: number
@@ -80,6 +81,15 @@ export default function DiamondPropertiesComponent({
 }) {
   const mergedProperties = { ...defaultProperties, ...properties }
 
+  const mappedProperties = reverseMappingDiamondProperties(
+    mergedProperties.colorGrade ?? 0,
+    mergedProperties.clarityGrade ?? 0,
+    mergedProperties.cutGrade ?? 0,
+    mergedProperties.fluorescence ?? 0,
+    mergedProperties.polishGrade ?? 0,
+    mergedProperties.symmetryGrade ?? 0
+  );
+
   const renderPropertyRow = (key: string, value: any) => (
     <TableRow key={key}>
       <TableCell className="font-light py-1">
@@ -149,12 +159,12 @@ export default function DiamondPropertiesComponent({
                 <TableCell className="w-1/2 text-left font-bold text-gray-600 py-1">{ethers.decodeBytes32String(nftProperties.id)}</TableCell>
               </TableRow>
               {renderPropertyRow('Carat', Number(mergedProperties.microCarat) / 1000000)}
-              {renderPropertyRow('Color', mergedProperties.colorGrade)}
-              {renderPropertyRow('Clarity', mergedProperties.clarityGrade)}
-              {renderPropertyRow('Cut', mergedProperties.cutGrade)}
-              {renderPropertyRow('Fluorescence', mergedProperties.fluorescence)}
-              {renderPropertyRow('Polish', mergedProperties.polishGrade)}
-              {renderPropertyRow('Symmetry', mergedProperties.symmetryGrade)}
+              {renderPropertyRow('Color', mappedProperties.color)}
+              {renderPropertyRow('Clarity', mappedProperties.clarity)}
+              {renderPropertyRow('Cut', mappedProperties.cut)}
+              {renderPropertyRow('Fluorescence', mappedProperties.fluorescence)}
+              {renderPropertyRow('Polish', mappedProperties.polish)}
+              {renderPropertyRow('Symmetry', mappedProperties.symmetry)}
               <TableRow>
                 <TableCell colSpan={2} className="font-bold pt-3 pb-1">Additional Grading Information</TableCell>
               </TableRow>
