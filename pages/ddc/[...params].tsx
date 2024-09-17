@@ -31,20 +31,20 @@ export default function DDCPage() {
   if (error) return <div>Error: {error.message}</div>;
 
   const properties = ddcData ? {
-    microCarat: ddcData[0].toString(),
-    colorGrade: ddcData[1].toString(),
-    clarityGrade: ddcData[2].toString(),
-    cutGrade: ddcData[3].toString(),
-    fluorescence: ddcData[4].toString(),
-    polishGrade: ddcData[5].toString(),
-    symmetryGrade: ddcData[6].toString(),
+    microCarat: Number(ddcData[0]),
+    colorGrade: Number(ddcData[1]),
+    clarityGrade: Number(ddcData[2]),
+    cutGrade: Number(ddcData[3]),
+    fluorescence: Number(ddcData[4]),
+    polishGrade: Number(ddcData[5]),
+    symmetryGrade: Number(ddcData[6]),
   } : {};
 
   const nftProperties = {
     id: tokenIdBytes32,
-    creationDateTime: 'N/A',
+    creationDateTime: Math.floor(new Date('1 Jan 2024 00:00:00 UTC').getTime() / 1000),
     blockchain: chainId === '11155111' ? 'Sepolia' : 'Unknown',
-    mintTransactionId: 'N/A',
+    mintTransactionId: '0x'+('0').repeat(64),
   };
 
   return (

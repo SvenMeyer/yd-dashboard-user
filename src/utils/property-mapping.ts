@@ -130,7 +130,8 @@ export function mapPropertyToUint8(value: string, map: Record<string, number>): 
 }
 
 // Function for reverse mapping
-export function mapUint8ToProperty(value: number, inverseMap: Record<number, string>): string {
+export function mapUint8ToProperty(value: number | undefined, inverseMap: Record<number, string>): string {
+  if (value === undefined) return 'UNDEFINED';
   const mappedValue = inverseMap[value];
   if (mappedValue === undefined) {
     throw new Error(`Invalid value: ${value}`);

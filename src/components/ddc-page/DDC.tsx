@@ -34,13 +34,8 @@ type NFTProperties = {
   mintTransactionId: string
 }
 
-// Add this function before the defaultProperties object
-function dateStringToUnixTimestamp(dateString: string): number {
-  return Math.floor(new Date(dateString).getTime() / 1000);
-}
-
 const defaultProperties: DiamondProperties = {
-  reportDate: dateStringToUnixTimestamp('1 Jan 2024 00:00:00 UTC'),
+  reportDate: Math.floor(new Date('1 Jan 2024 00:00:00 UTC').getTime() / 1000),
   reportNumber: 'IGI-00000000',
   shape: 'Round Brilliant',
   microCarat: 1.01,
@@ -65,7 +60,7 @@ const defaultProperties: DiamondProperties = {
 
 const defaultNFTProperties: NFTProperties = {
   id: 'IGI-00000000',
-  creationDateTime: dateStringToUnixTimestamp('1 Jan 2024 00:00:00 UTC'),
+  creationDateTime: Math.floor(new Date('1 Jan 2024 00:00:00 UTC').getTime() / 1000),
   blockchain: 'zkSync',
   mintTransactionId: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 }
@@ -131,7 +126,19 @@ export default function DiamondPropertiesComponent({
               </TableRow>
               <TableRow>
                 <TableCell className="font-light py-1">Creation date / time</TableCell>
-                <TableCell className="py-1">{nftProperties.creationDateTime}</TableCell>
+                <TableCell className="py-1">
+                  {new Date(nftProperties.creationDateTime * 1000).toLocaleString(undefined, {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    // timeZone: 'UTC',
+                    timeZoneName: 'short'
+                  })}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-light py-1">Blockchain</TableCell>
