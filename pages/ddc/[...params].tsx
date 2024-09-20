@@ -18,7 +18,6 @@ export default function DDCPage() {
     client,
     chain: sepolia,
     address: contractAddress as string,
-    abi: DDC_ABI,
   });
 
   const { data: ddcData, isLoading, error } = useReadContract({
