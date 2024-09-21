@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ethers } from "ethers"; // Assuming ethers is imported somewhere in the project
-import { reverseMappingDiamondProperties } from '../../utils/property-mapping';
+import { reverseMappingDiamondProperties } from '@/lib/property-mapping';
 
 type DiamondProperties = {
   reportDate?: number

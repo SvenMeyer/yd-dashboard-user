@@ -1,26 +1,31 @@
 "use client";
 
-import { NFT_CONTRACTS } from "@/consts/nft_contracts";
+import React, { useState, useEffect } from 'react';
 import { Link } from "@chakra-ui/next-js";
 import {
   Box,
-  Card,
-  CardBody,
-  CardHeader,
   Flex,
   Heading,
   Image,
-  Stack,
-  StackDivider,
   Text,
 } from "@chakra-ui/react";
+import { NftContract } from '@/consts/nft_contracts';
 
 export default function Home() {
+  const [NFT_CONTRACTS, setNFT_CONTRACTS] = useState<NftContract[]>([]);
+
+  useEffect(() => {
+    const loadContracts = async () => {
+      const { NFT_CONTRACTS } = await import("@/consts/nft_contracts");
+      setNFT_CONTRACTS(NFT_CONTRACTS);
+    };
+    loadContracts();
+  }, []);
+
   return (
     <Flex>
       <Box mt="24px" m="auto">
         <Flex direction="column" gap="4">
-
           <Heading ml="20px" mt="40px">
             Trending collections
           </Heading>
@@ -37,9 +42,9 @@ export default function Home() {
                 w={300}
                 h={400}
                 key={item.address}
-                href={`/collection/${item.chain.id.toString()}/${item.address}`}
+                href={`/collection/${item.chain.id}/${item.address}`}
               >
-                <Image src={item.thumbnailUrl} />
+                <Image src={item.thumbnailUrl} alt={item.title || "NFT Image"} />
                 <Text fontSize="large" mt="10px">
                   {item.title}
                 </Text>
