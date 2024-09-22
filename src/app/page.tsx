@@ -27,7 +27,7 @@ export default function Home() {
       <Box mt="24px" m="auto">
         <Flex direction="column" gap="4">
           <Heading ml="20px" mt="40px">
-            Trending collections
+            Available NFT Contracts
           </Heading>
           <Flex
             direction="row"

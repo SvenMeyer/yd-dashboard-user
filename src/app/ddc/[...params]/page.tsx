@@ -48,7 +48,7 @@ export default function DDCPage() {
 
   return (
     <div>
-      {/* <Navbar /> */} {/* Removed this line */}
+      <Navbar />
       <DiamondPropertiesComponent properties={properties} nftProperties={nftProperties} />
     </div>
   );

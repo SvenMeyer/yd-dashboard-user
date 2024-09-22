@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/shared/Providers";
 import { Navbar } from "@/components/shared/Navbar";
+import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: "Marketplace",
