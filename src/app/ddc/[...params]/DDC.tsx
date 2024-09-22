@@ -103,13 +103,13 @@ export default function DiamondPropertiesComponent({
   return (
     <div className="flex flex-col md:flex-row bg-white text-gray-800 font-['Poppins',_sans-serif] gap-4">
       <div className="w-full md:w-1/2 flex flex-col gap-4 order-1 md:order-1">
-        <div className="w-full">
+        <div className="diamond-image-container" style={{ width: '300px', height: '300px' }}>
           <Image
             src={defaultImageLink}
             alt="Diamond"
-            width={500}
-            height={500}
-            className="w-full h-auto"
+            layout="responsive"
+            width={300}
+            height={300}
           />
         </div>
 

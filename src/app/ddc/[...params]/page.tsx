@@ -3,7 +3,8 @@
 import { useParams } from 'next/navigation';
 import { useReadContract } from 'thirdweb/react';
 import DiamondPropertiesComponent from './DDC';
-import { Navbar } from '@/components/shared/Navbar';
+// Remove the Navbar import if it's not needed here
+// import { Navbar } from '@/components/shared/Navbar';
 import { DDC_ABI } from '@/abis/DDC';
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
@@ -12,7 +13,9 @@ import { client } from "@/consts/client";
 export default function DDCPage() {
   // Destructure the parameters
   const params = useParams() as { params: string[] };
-  const [chainId, contractAddress, tokenId] = params.params || [];
+  const [chainId, contractAddress, _, tokenId] = params.params || [];
+
+  console.log({chainId, contractAddress, tokenId});
 
   const contract = getContract({
     client,
@@ -25,6 +28,8 @@ export default function DDCPage() {
     method: "function getDDCStruct(bytes32 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
     params: [tokenId as `0x${string}`],
   });
+
+  console.log({ddcData});
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -48,7 +53,7 @@ export default function DDCPage() {
 
   return (
     <div>
-      <Navbar />
+      {/* Remove the Navbar component from here */}
       <DiamondPropertiesComponent properties={properties} nftProperties={nftProperties} />
     </div>
   );
