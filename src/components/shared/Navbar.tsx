@@ -31,7 +31,8 @@ import { SideMenu } from "./SideMenu";
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
-  { label: "Portfolio", href: "/profile" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Profile", href: "/profile" },
   { label: "Search", href: "/search" },
   { label: "Mint", href: "/mint" }
 ];

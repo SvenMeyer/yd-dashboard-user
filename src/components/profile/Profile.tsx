@@ -70,7 +70,7 @@ export function ProfileSection(props: Props) {
       owner: address,
       queryOptions: {
         enabled: !!address,
-        retry: false, // Disable automatic retries
+        retry: 0, // Disable automatic retries
       },
     }
   );

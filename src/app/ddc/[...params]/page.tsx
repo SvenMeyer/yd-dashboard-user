@@ -5,7 +5,7 @@ import { useReadContract } from 'thirdweb/react';
 import DiamondPropertiesComponent from './DDC';
 // Remove the Navbar import if it's not needed here
 // import { Navbar } from '@/components/shared/Navbar';
-import { DDC_ABI } from '@/abis/DDC';
+// import { DDC_ABI } from '@/types/DDC';
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { client } from "@/consts/client";
@@ -53,7 +53,6 @@ export default function DDCPage() {
 
   return (
     <div>
-      {/* Remove the Navbar component from here */}
       <DiamondPropertiesComponent properties={properties} nftProperties={nftProperties} />
     </div>
   );
