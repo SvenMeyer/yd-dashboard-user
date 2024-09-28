@@ -2,7 +2,7 @@ import { useReadContract } from "thirdweb/react";
 import { Box, Image, Text, VStack, HStack } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
-import { IntToBytes32, bytes32ToString } from "@/lib/utils";
+import { uint256ToBytes32, bytes32ToString, Uint256ToString } from "@/lib/utils";
 
 type Props = {
   tokenId: bigint;
@@ -13,10 +13,10 @@ export function DDCCard({ tokenId, contract }: Props) {
   const { data: ddcData, isLoading, error } = useReadContract({
     contract,
     method: "function getDDCStruct(bytes32 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
-    params: [IntToBytes32(tokenId)],
+    params: [uint256ToBytes32(tokenId)],
   });
 
-  if (isLoading) return <Text>Loading Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>;
+  if (isLoading) return <Text>Loading Token ID: {bytes32ToString(uint256ToBytes32(tokenId))}</Text>;
 
   if (error) {
     return (
@@ -51,7 +51,7 @@ export function DDCCard({ tokenId, contract }: Props) {
         <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
         <Box width="256px" px={4}>
           <VStack align="stretch" spacing={2}>
-            <Text fontWeight="bold" textAlign="center">Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>
+            <Text fontWeight="bold" textAlign="center">Token ID: {Uint256ToString(tokenId)}</Text>
             <HStack justify="space-between" spacing={4}>
               <Text>Carat:</Text>
               <Text>{Number(microCarat)/1000000}</Text>
