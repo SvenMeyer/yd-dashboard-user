@@ -7,7 +7,7 @@ import { balanceOf, tokenOfOwnerByIndex } from "thirdweb/extensions/erc721";
 import type { NftContract } from "@/consts/nft_contracts";
 
 import { useState, useEffect } from "react";
-import { Box, SimpleGrid, Button, Text } from "@chakra-ui/react";
+import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
 import { DDCCard } from "@/components/ddc/DDCCard";
 
 const PAGE_SIZE = 10;
@@ -57,7 +57,7 @@ export function PortfolioSection({ address, selectedCollection }: Props) {
     if (!tokenIdsLoading && ownedTokenIds) {
       console.log("Owned token IDs:", ownedTokenIds);
       setIsLoading(false);
-      const displayTokens = ownedTokenIds;
+      const displayTokens = [...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds];
       console.log("displayTokens =", displayTokens);
       setDisplayedNFTs(displayTokens);
     }
@@ -75,21 +75,23 @@ export function PortfolioSection({ address, selectedCollection }: Props) {
 
   return (
     <Box>
-      <Text fontSize="default" fontWeight="default" color="default">
+      <Text 
+        fontSize="default" 
+        fontWeight="default" 
+        color="default" 
+        mb={6}
+        textAlign="center"
+      >
         {balanceText}
       </Text>
       
-      {isLoading ? (
-        <Text fontSize="default" fontWeight="default" color="default">Loading NFTs...</Text>
-      ) : error ? (
-        <Text fontSize="default" fontWeight="default" color="default">Error loading NFTs: {error}</Text>
-      ) : (
-        <SimpleGrid columns={3} spacing={4}>
-          {displayedNFTs.map((tokenId) => (
+      <Wrap spacing={6} justify="center" align="center">
+        {displayedNFTs.map((tokenId, index) => (
+          <WrapItem key={index}>
             <DDCCard tokenId={tokenId} contract={contract} />
-          ))}
-        </SimpleGrid>
-      )}
+          </WrapItem>
+        ))}
+      </Wrap>
     </Box>
   );
 }
