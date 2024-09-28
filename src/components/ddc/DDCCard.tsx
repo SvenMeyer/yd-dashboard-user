@@ -1,5 +1,5 @@
 import { useReadContract } from "thirdweb/react";
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text, VStack, HStack } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
 import { IntToBytes32, bytes32ToString } from "@/lib/utils";
@@ -16,7 +16,7 @@ export function DDCCard({ tokenId, contract }: Props) {
     params: [IntToBytes32(tokenId)],
   });
 
-  if (isLoading) return <Text>Loading DDC ID: {tokenId} ...</Text>;
+  if (isLoading) return <Text>Loading Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>;
 
   if (error) {
     return (
@@ -46,16 +46,43 @@ export function DDCCard({ tokenId, contract }: Props) {
   );
 
   return (
-    <Box borderWidth={1} borderRadius="lg" overflow="hidden" p={4}>
-      <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
-      <Text>Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>
-      <Text>Carat       : {Number(microCarat)/1000000}</Text>
-      <Text>Color       : {color}</Text>
-      <Text>Clarity     : {clarity}</Text>
-      <Text>Cut         : {cut}</Text>
-      <Text>Fluorescence: {fluorescenceGrade}</Text>
-      <Text>Polish      : {polish}</Text>
-      <Text>Symmetry    : {symmetry}</Text>
+    <Box borderWidth={1} borderRadius="lg" overflow="hidden" width="300px">
+      <VStack spacing={4} align="center" p={4}>
+        <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
+        <Box width="256px" px={4}>
+          <VStack align="stretch" spacing={2}>
+            <Text fontWeight="bold" textAlign="center">Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Carat:</Text>
+              <Text>{Number(microCarat)/1000000}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Color:</Text>
+              <Text>{color}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Clarity:</Text>
+              <Text>{clarity}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Cut:</Text>
+              <Text>{cut}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Fluorescence:</Text>
+              <Text>{fluorescenceGrade}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Polish:</Text>
+              <Text>{polish}</Text>
+            </HStack>
+            <HStack justify="space-between" spacing={4}>
+              <Text>Symmetry:</Text>
+              <Text>{symmetry}</Text>
+            </HStack>
+          </VStack>
+        </Box>
+      </VStack>
     </Box>
   );
 }
