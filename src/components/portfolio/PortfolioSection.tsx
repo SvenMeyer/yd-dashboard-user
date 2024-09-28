@@ -1,13 +1,13 @@
 import { client } from "@/consts/client";
 import { getContract } from "thirdweb";
-import { useReadContract } from "thirdweb/react";
-import { getOwnedTokenIds } from "thirdweb/extensions/erc721";
-
-import { balanceOf, tokenOfOwnerByIndex } from "thirdweb/extensions/erc721";
-import type { NftContract } from "@/consts/nft_contracts";
+import { useReadContract } from "thirdweb/react"
+import { balanceOf, getOwnedTokenIds, tokenOfOwnerByIndex } from "thirdweb/extensions/erc721";
 
 import { useState, useEffect } from "react";
-import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
+import { Box, Wrap, WrapItem, Text , Flex} from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+
+import type { NftContract } from "@/consts/nft_contracts";
 import { DDCCard } from "@/components/ddc/DDCCard";
 
 const PAGE_SIZE = 10;
@@ -55,13 +55,11 @@ export function PortfolioSection({ address, selectedCollection }: Props) {
 
   useEffect(() => {
     if (!tokenIdsLoading && ownedTokenIds) {
-      console.log("Owned token IDs:", ownedTokenIds);
       setIsLoading(false);
-      const displayTokens = [...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds];
-      console.log("displayTokens =", displayTokens);
-      setDisplayedNFTs(displayTokens);
+      // const displayTokens = [...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds];
+      setDisplayedNFTs(ownedTokenIds);
     }
-  }, [ownedTokenIds, tokenIdsLoading]);
+  }, [ownedTokenIds, ownedTokenIds]);
 
   console.log("Rendering PortfolioSection. totalNFTs:", totalNFTs, "address:", address);
 
@@ -69,21 +67,26 @@ export function PortfolioSection({ address, selectedCollection }: Props) {
     return <Text fontSize="default" fontWeight="default" color="default">Loading DDC balance ...</Text>;
   }
 
-  const balanceText = balance === undefined
-    ? `ERROR: Request to retrieve the number of DDCs of account ${address} returned undefined`
-    : `${balance.toString()} DDCs found in account ${address}`;
+  const isError = balance === undefined;
+  const balanceCount = isError ? "Error" : balance.toString();
 
   return (
     <Box>
-      <Text 
-        fontSize="default" 
-        fontWeight="default" 
-        color="default" 
-        mb={6}
-        textAlign="center"
+      <Alert
+        status={isError ? "error" : "info"}
+        variant="subtle"
+        borderRadius="md"
+        mb={4}
       >
-        {balanceText}
-      </Text>
+        <Flex align="center" width="100%">
+          <AlertIcon />
+          <Text fontWeight="bold" mr={2}>
+            {isError 
+              ? `Error: Unable to retrieve the number of DDCs for account ${address}` 
+              : `${balanceCount} DDC${balanceCount === "1" ? "" : "s"} found in account ${address}`}
+          </Text>
+        </Flex>
+      </Alert>
       
       <Wrap spacing={6} justify="center" align="center">
         {displayedNFTs.map((tokenId, index) => (
