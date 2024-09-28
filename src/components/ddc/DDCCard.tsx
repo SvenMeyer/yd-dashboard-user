@@ -47,7 +47,7 @@ export function DDCCard({ tokenId, contract }: Props) {
 
   return (
     <Box borderWidth={1} borderRadius="lg" overflow="hidden" p={4}>
-      <Image src="/path/to/diamond/image.jpg" alt="Diamond image" />
+      <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
       <Text>Token ID: {bytes32ToString(IntToBytes32(tokenId))}</Text>
       <Text>Carat       : {Number(microCarat)/1000000}</Text>
       <Text>Color       : {color}</Text>
