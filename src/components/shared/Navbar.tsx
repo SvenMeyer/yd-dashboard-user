@@ -44,9 +44,16 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <Box py="30px" px={{ base: "20px", lg: "50px" }} width="100%">
-      <Flex direction="row" alignItems="center" justifyContent="space-between" maxWidth="1200px" margin="0 auto">
-        <Flex alignItems="center" gap={4}>
+    <Box width="100%">
+      <Flex 
+        direction="row" 
+        alignItems="center" 
+        justifyContent="space-between" 
+        maxWidth="100%" 
+        margin="0 auto"
+        py="30px"
+      >
+        <Flex alignItems="center" gap={4} flex={1}>
           <Heading
             as={Link}
             href="/"
@@ -75,7 +82,7 @@ export function Navbar() {
             ))}
           </Flex>
         </Flex>
-        <Flex alignItems="center" gap={4} ml="auto">
+        <Box>
           <ConnectButton
             client={client}
             connectModal={{
@@ -84,7 +91,7 @@ export function Navbar() {
             theme={colorMode}
             connectButton={{ style: { height: "56px" } }}
           />
-        </Flex>
+        </Box>
         <Box display={{ lg: "none", base: "block" }}>
           <SideMenu />
         </Box>

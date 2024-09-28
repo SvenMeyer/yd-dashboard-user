@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Providers } from "@/components/shared/Providers";
 import { Navbar } from "@/components/shared/Navbar";
 import '@/styles/globals.css';
+import { Box } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
   title: "Marketplace",
@@ -15,10 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ paddingBottom: "100px" }}>
+      <body>
         <Providers>
-          <Navbar />
-          {children}
+          <Box padding="20px 60px 30px 60px">
+            <Navbar />
+            {children}
+          </Box>
         </Providers>
       </body>
     </html>
