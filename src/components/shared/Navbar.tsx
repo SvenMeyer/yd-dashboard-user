@@ -53,35 +53,55 @@ export function Navbar() {
         margin="0 auto"
         py="30px"
       >
-        <Flex alignItems="center" gap={4} flex={1}>
+        <Box
+          as={Link}
+          href="/"
+          _hover={{ textDecoration: "none" }}
+          color="inherit"
+          lineHeight="1"
+          textAlign="center"
+        >
           <Heading
-            as={Link}
-            href="/"
-            _hover={{ textDecoration: "none" }}
-            color="inherit"
+            fontSize="3xl"
             fontWeight="extrabold"
+            mb="2px"
           >
             YourDiamonds DDC
           </Heading>
-          <Flex display={{ lg: "flex", base: "none" }} alignItems="center" gap={4}>
-            {menuItems.map((item) => (
-              <Button
-                key={item.label}
-                as={Link}
-                href={item.href}
-                variant="outline"
-                height="56px"
-                px={4}
-                bg={pathname === item.href ? "gray.100" : "transparent"}
-                _hover={{
-                  bg: pathname === item.href ? "gray.200" : "gray.100"
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Flex>
+          <Heading
+            fontSize="md"
+            fontWeight="medium"
+          >
+            Digital Diamond Certificate
+          </Heading>
+        </Box>
+        
+        <Flex 
+          display={{ lg: "flex", base: "none" }} 
+          alignItems="center" 
+          justifyContent="center"
+          flex={1}
+          px={4}
+        >
+          {menuItems.map((item) => (
+            <Button
+              key={item.label}
+              as={Link}
+              href={item.href}
+              variant="outline"
+              height="56px"
+              px={4}
+              mx={2}
+              bg={pathname === item.href ? "gray.100" : "transparent"}
+              _hover={{
+                bg: pathname === item.href ? "gray.200" : "gray.100"
+              }}
+            >
+              {item.label}
+            </Button>
+          ))}
         </Flex>
+        
         <Box>
           <ConnectButton
             client={client}
