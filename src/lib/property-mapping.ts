@@ -191,3 +191,12 @@ export function reverseMappingDiamondProperties(
   };
 }
 
+export {
+  colorMap,
+  clarityMap,
+  cutMap,
+  fluorescenceMap,
+  polishMap,
+  symmetryMap,
+};
+
