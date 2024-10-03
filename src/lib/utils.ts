@@ -21,14 +21,14 @@ export function bytes32ToUint256(bytes32: string): bigint {
   return BigInt(`0x${hexString}`);
 }
 
-export function stringToBytes32(str: string): string {
+export function stringToBytes32(str: string): `0x${string}` {
   const encoder = new TextEncoder();
   const encoded = encoder.encode(str);
   const paddedArray = new Uint8Array(32);
   paddedArray.set(encoded);
-  return '0x' + Array.from(paddedArray)
+  return ('0x' + Array.from(paddedArray)
     .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+    .join('')) as `0x${string}`;
 }
 
 export function bytes32ToString(bytes32: string): string {
