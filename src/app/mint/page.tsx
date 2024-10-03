@@ -21,8 +21,9 @@ import {
 
 // import { isAddress } from 'ethers/lib/utils';
 
+import { DDC_ABI } from '@/types/DDC_ABI';
 import { NFT_CONTRACTS } from '@/consts/nft_contracts';
-import { StringToUint256 } from '@/lib/utils';
+import { StringToUint256, stringToBytes32 } from '@/lib/utils';
 import {
   colorMap,
   clarityMap,
@@ -33,15 +34,16 @@ import {
   mapPropertyToUint8,
 } from '@/lib/property-mapping';
 import {
-  sendTransaction,
   getContract,
   prepareContractCall,
 } from "thirdweb";
 import {
   useActiveAccount,
+  useSendTransaction,
 } from "thirdweb/react";
 import { sepolia } from "thirdweb/chains";
 import { client } from "@/consts/client";
+import { estimateGas } from "thirdweb";
 
 const colorOptions = Object.keys(colorMap);
 const clarityOptions = Object.keys(clarityMap);
@@ -67,6 +69,7 @@ export default function MintPage() {
 
   const toast = useToast();
   const account = useActiveAccount();
+  const { mutate: sendTx, data: transactionResult } = useSendTransaction();
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -92,7 +95,7 @@ export default function MintPage() {
       return;
     }
 
-    const tokenId = StringToUint256(inscription);
+    const tokenId: `0x${string}` = stringToBytes32(inscription);
     const microCarat = Math.floor(parseFloat(carat) * 1000000);
     const colorValue = mapPropertyToUint8(color, colorMap);
     const clarityValue = mapPropertyToUint8(clarity, clarityMap);
@@ -104,9 +107,12 @@ export default function MintPage() {
     try {
       const contract = getContract({
         address: NFT_CONTRACTS[0].address,
-        chain: sepolia,
+        chain: NFT_CONTRACTS[0].chain,
         client,
       });
+
+      console.log('DDC NFT contract :', NFT_CONTRACTS[0].address);
+      console.log({contract});
 
       console.log('Minting DDC with parameters:', {
         to: address,
@@ -123,24 +129,26 @@ export default function MintPage() {
 
       const transaction = prepareContractCall({
         contract,
-        method: "function safeMint(address,uint256,uint32,uint8,uint8,uint8,uint8,uint8,uint8,string)",
+        method: "function safeMint(address,bytes32,uint32,uint8,uint8,uint8,uint8,uint8,uint8,string)",
         params: [address, tokenId, microCarat, colorValue, clarityValue, cutValue, fluorescenceValue, polishValue, symmetryValue, uri],
       });
 
-      const { transactionHash } = await sendTransaction({
-        account,
+      console.log({transaction});
+
+      const gas = await estimateGas({
         transaction,
       });
 
-      toast({
-        title: 'DDC Minted',
-        description: `Your DDC has been successfully minted! Transaction Hash: ${transactionHash}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+      console.log({gas});
+
+      sendTx(transaction);
+
     } catch (error) {
       console.error('Error minting DDC:', error);
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
       toast({
         title: 'Minting Failed',
         description: 'There was an error while minting your DDC. Please try again.',
