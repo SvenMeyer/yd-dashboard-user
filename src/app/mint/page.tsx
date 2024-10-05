@@ -137,6 +137,7 @@ export default function MintPage() {
 
       const gas = await estimateGas({
         transaction,
+        from: account.address, // <--- add this
       });
 
       console.log({gas});
