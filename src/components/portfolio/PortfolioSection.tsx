@@ -56,7 +56,6 @@ export function PortfolioSection({ address, selectedCollection }: Props) {
   useEffect(() => {
     if (!tokenIdsLoading && ownedTokenIds) {
       setIsLoading(false);
-      // const displayTokens = [...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds,...ownedTokenIds];
       setDisplayedNFTs(ownedTokenIds);
     }
   }, [ownedTokenIds, ownedTokenIds]);

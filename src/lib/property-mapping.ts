@@ -123,20 +123,15 @@ const inverseSymmetryMap = createInverseMap(symmetryMap);
 // Function to map string values to uint8
 export function mapPropertyToUint8(value: string, map: Record<string, number>): number {
   const mappedValue = map[value];
-  if (mappedValue === undefined) {
-    throw new Error(`Invalid value: ${value}`);
-  }
-  return mappedValue;
+  return mappedValue !== undefined ? mappedValue : 0;
 }
 
 // Function for reverse mapping
 export function mapUint8ToProperty(value: number | undefined, inverseMap: Record<number, string>): string {
   if (value === undefined) return 'UNDEFINED';
-  const mappedValue = inverseMap[value];
-  if (mappedValue === undefined) {
-    throw new Error(`Invalid value: ${value}`);
-  }
-  return mappedValue;
+  const maxValue = Math.max(...Object.keys(inverseMap).map(Number));
+  if (value > maxValue || value < 0) return 'UNDEFINED';
+  return inverseMap[value] || 'UNDEFINED';
 }
 
 // // Usage example
