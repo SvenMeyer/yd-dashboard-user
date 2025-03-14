@@ -4,11 +4,12 @@ import { MediaRenderer, useReadContract } from "thirdweb/react";
 import { getNFT as getNFT721 } from "thirdweb/extensions/erc721";
 import { getNFT as getNFT1155 } from "thirdweb/extensions/erc1155";
 import { client } from "@/consts/client";
-import { Box, Flex, Heading, Tab, TabList, Tabs, Text, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Spinner, Button } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useMarketplaceContext } from "@/hooks/useMarketplaceContext";
 import { ListingGrid } from "./ListingGrid";
 import { AllNftsGrid } from "./AllNftsGrid";
+import { ClientLayout } from "@/components/shared/ClientLayout";
 
 export default function CollectionPage() {
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -23,12 +24,23 @@ export default function CollectionPage() {
   } = useMarketplaceContext();
 
   useEffect(() => {
+    console.log('Collection page debug:', {
+      isLoading,
+      nftContract,
+      contractMetadata,
+      type,
+      listingsInSelectedCollection,
+      supplyInfo
+    });
+    
     if (!isLoading && (!nftContract || !contractMetadata)) {
-      setError("Unable to fetch collection data. Please try again later.");
+      const errorMsg = "Unable to fetch collection data. Please try again later.";
+      console.error('Collection error:', errorMsg, { nftContract, contractMetadata });
+      setError(errorMsg);
     }
-  }, [isLoading, nftContract, contractMetadata]);
+  }, [isLoading, nftContract, contractMetadata, type, listingsInSelectedCollection, supplyInfo]);
 
-  const { data: firstNFT, isLoading: isLoadingFirstNFT } = useReadContract(
+  const { data: firstNFT, isLoading: isLoadingFirstNFT, error: firstNFTError } = useReadContract(
     type === "ERC1155" ? getNFT1155 : getNFT721,
     {
       contract: nftContract,
@@ -38,6 +50,12 @@ export default function CollectionPage() {
       },
     }
   );
+  
+  useEffect(() => {
+    if (firstNFTError) {
+      console.error('Error fetching first NFT:', firstNFTError);
+    }
+  }, [firstNFTError]);
 
   console.log({firstNFT});
 
@@ -61,7 +79,7 @@ export default function CollectionPage() {
   const thumbnailImage = contractMetadata?.image || firstNFT?.metadata.image || "";
 
   return (
-    <>
+    <ClientLayout>
       <Box mt="24px">
         <Flex direction="column" gap="4">
           <MediaRenderer
@@ -88,35 +106,37 @@ export default function CollectionPage() {
             </Text>
           )}
 
-          <Tabs
-            variant="soft-rounded"
-            mx="auto"
-            mt="20px"
-            onChange={(index) => setTabIndex(index)}
-            isLazy
-          >
-            <TabList>
-              <Tab>Listings ({listingsInSelectedCollection.length || 0})</Tab>
-              <Tab>
-                All items{" "}
-                {supplyInfo
-                  ? `(${(
-                      supplyInfo.endTokenId -
-                      supplyInfo.startTokenId +
-                      1n
-                    ).toString()})`
-                  : ""}
-              </Tab>
-              {/* Support for English Auctions coming soon */}
-              {/* <Tab>Auctions ({allAuctions?.length || 0})</Tab> */}
-            </TabList>
-          </Tabs>
+          <Flex mx="auto" mt="20px" gap="2">
+            <Button
+              variant={tabIndex === 0 ? "solid" : "outline"}
+              onClick={() => setTabIndex(0)}
+              borderRadius="full"
+            >
+              Listings ({listingsInSelectedCollection.length || 0})
+            </Button>
+            <Button
+              variant={tabIndex === 1 ? "solid" : "outline"}
+              onClick={() => setTabIndex(1)}
+              borderRadius="full"
+            >
+              All items{" "}
+              {supplyInfo
+                ? `(${(
+                    supplyInfo.endTokenId -
+                    supplyInfo.startTokenId +
+                    1n
+                  ).toString()})`
+                : ""}
+            </Button>
+            {/* Support for English Auctions coming soon */}
+            {/* <Button variant="outline">Auctions ({allAuctions?.length || 0})</Button> */}
+          </Flex>
         </Flex>
       </Box>
       <Flex direction="column">
         {tabIndex === 0 && <ListingGrid />}
         {tabIndex === 1 && <AllNftsGrid />}
       </Flex>
-    </>
+    </ClientLayout>
   );
 }

@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/shared/Providers";
-import { Navbar } from "@/components/shared/Navbar";
 import '@/styles/globals.css';
-import { Box } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
-  title: "Marketplace",
-  description: "",
+  title: "YourDiamonds DDC",
+  description: "Digital Diamond Certificates powered by blockchain technology",
 };
 
 export default function RootLayout({
@@ -18,10 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Box padding="20px 60px 30px 60px">
-            <Navbar />
-            {children}
-          </Box>
+          {children}
         </Providers>
       </body>
     </html>

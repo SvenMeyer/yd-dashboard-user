@@ -134,32 +134,6 @@ export function mapUint8ToProperty(value: number | undefined, inverseMap: Record
   return inverseMap[value] || 'UNDEFINED';
 }
 
-// // Usage example
-// export function mapDiamondProperties(
-//   color: string,
-//   clarity: string,
-//   cut: string,
-//   fluorescence: string,
-//   polish: string,
-//   symmetry: string
-// ): {
-//   colorValue: number,
-//   clarityValue: number,
-//   cutValue: number,
-//   fluorescenceValue: number,
-//   polishValue: number,
-//   symmetryValue: number
-// } {
-//   return {
-//     colorValue: mapPropertyToUint8(color, colorMap),
-//     clarityValue: mapPropertyToUint8(clarity, clarityMap),
-//     cutValue: mapPropertyToUint8(cut, cutMap),
-//     fluorescenceValue: mapPropertyToUint8(fluorescence, fluorescenceMap),
-//     polishValue: mapPropertyToUint8(polish, polishMap),
-//     symmetryValue: mapPropertyToUint8(symmetry, symmetryMap)
-//   };
-// }
-
 // Reverse mapping function
 export function reverseMappingDiamondProperties(
   colorValue: number,

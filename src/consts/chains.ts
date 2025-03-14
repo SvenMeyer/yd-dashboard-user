@@ -1,9 +1,23 @@
 import { defineChain } from "thirdweb";
+import { avalancheFuji as baseAvalancheFuji, sepolia as baseSepolia, polygonAmoy as basePolygonAmoy } from "thirdweb/chains";
 
 /**
- * All chains should be exported from this file
+ * Custom chain configurations with RPC URLs
  */
-export { avalancheFuji, sepolia, polygonAmoy } from "thirdweb/chains";
+export const sepolia = {
+  ...baseSepolia,
+  // Use Alchemy's public RPC URL for Sepolia which has higher rate limits
+  rpc: "https://eth-sepolia.g.alchemy.com/v2/demo"
+};
+
+export const polygonAmoy = {
+  ...basePolygonAmoy,
+  // Use a public RPC URL for Polygon Amoy
+  rpc: "https://polygon-amoy.blockpi.network/v1/rpc/public"
+};
+
+// Re-export avalancheFuji for consistency
+export const avalancheFuji = baseAvalancheFuji;
 
 /**
  * Define any custom chain using `defineChain`

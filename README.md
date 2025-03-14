@@ -1,28 +1,27 @@
+# Digital Diamond Certificate (DDC) Platform
 
 <p align="center">
     <br />
-    <a href="https://thirdweb.com">
-        <img src="https://github.com/thirdweb-dev/js/blob/main/legacy_packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+    <img src="public/images/homepage-hero-diamond.png" width="200" alt="Digital Diamond Certificate"/>
     <br />
 </p>
 
-<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> NFT Marketplace</h1>
+<h1 align="center">YourDiamonds DDC Platform</h1>
 
-<p align="center"><strong>Build your own NFT Marketplace with thirdweb SDK</strong></p>
+<p align="center"><strong>Access and manage your Digital Diamond Certificates powered by blockchain technology</strong></p>
 
 ## Features
-- Support for multiple collections
-- Support for multiple chains
-- Create listings with custom payment currencies
-- Public profile page: [vitalik.eth's Profile](https://marketplace.thirdweb-preview.com/profile/vitalik.eth)
-- _and [more to come](https://github.com/thirdweb-example/marketplace-template/issues?q=is%3Aissue+is%3Aopen+feature+request)_
-
-Want to request a feature? [Create a GitHub issue!](https://github.com/thirdweb-example/marketplace-template/issues/new)
+- View and verify your Digital Diamond Certificates
+- Support for multiple DDC collections
+- Support for multiple blockchain networks
+- Comprehensive diamond properties and documentation
+- Secure ownership verification
+- _More features coming soon_
 
 ## Installation
-### 1. Clone the template or [fork it](https://github.com/thirdweb-example/marketplace-template/fork)
+### 1. Clone the repository
 ```bash
-git clone https://github.com/thirdweb-example/marketplace-template
+git clone https://github.com/yourusername/yd-marketplace
 ```
 
 ### 2. Install the dependencies
@@ -45,7 +44,7 @@ NEXT_PUBLIC_TW_CLIENT_ID="<your-thirdweb-client-id"
 Don't have a thirdweb clientId? [Grab one now](https://thirdweb.com/dashboard/settings/api-keys). Make sure you set up the `Allowed Domains` properly. [Learn how](https://portal.thirdweb.com/account/api-keys)
 
 ### 4. You're set
-You can now run the template in your local machine.
+You can now run the platform in your local machine.
 ```bash
 # npm
 npm run dev
@@ -57,89 +56,71 @@ yarn dev
 pnpm dev
 ```
 
-## Customize your marketplace
+## Configuration
 
 ### 1. Supported networks
-This template allows you to build a marketplace that can handle multiple NFT collections from multiple networks. For each network you want to support, you need to deploy a [MarketplaceV3 contract](https://thirdweb.com/thirdweb.eth/MarketplaceV3) on that network.
-
-To add a chain (network) to your marketplace, head to the file [`./src/consts/chains.ts`](./src/consts/chains.ts) and add that chain to the export array:
+This platform supports multiple DDC collections across different networks. To add a chain (network), head to the file [`./src/consts/chains.ts`](./src/consts/chains.ts) and add that chain to the export array:
 ```typescript
-export { ethereum, bsc } from "thirdweb/chains";
+export { sepolia, polygonAmoy } from "thirdweb/chains";
 ```
-[Learn more about thirdweb Chains](https://portal.thirdweb.com/typescript/v5/chain)
 
-If the chain you are looking is not in our [default list](https://portal.thirdweb.com/references/typescript/v5/variables), you can define your own chain using the `defineChain` method:
+If the chain you are looking for is not in the [default list](https://portal.thirdweb.com/references/typescript/v5/variables), you can define your own chain using the `defineChain` method:
 
 ```typescript
 // chain.ts
-import { defineChain, ethereum, bsc } from "thirdweb/chains";
+import { defineChain, sepolia } from "thirdweb/chains";
 
 const yourChainId = 4747;
 const yourCustomChain = defineChain(yourChainId);
 
-export { ethereum, bsc, yourCustomChain }
+export { sepolia, yourCustomChain }
 ```
 
-### 2. Supported marketplaces
-
-Once the marketplace contract deployment's completed, you need to put the MarketplaceV3 contract address and its respective chain in the file [`/src/consts/marketplace_contracts.ts`](/src/consts/marketplace_contract.ts)
+### 2. DDC Contract Configuration
+Add your DDC contract addresses and their respective chains in the file [`/src/consts/nft_contracts.ts`](/src/consts/nft_contracts.ts)
 
 Example:
 ```typescript
-import { yourCustomChain, ethereum } from "./chains";
+import { sepolia } from "./chains";
 
-export const MARKETPLACE_CONTRACTS: MarketplaceContract[] = [
+export const NFT_CONTRACTS: NftContract[] = [
   {
-    address: "your-marketplace-contrac-address-on-the-custom-chain",
-    chain: yourCustomChain,
-  },
-  {
-    address: "your-marketplace-contrac-address-on-ethereum",
-    chain: ethereum,
+    address: "your-ddc-contract-address",
+    chain: sepolia,
+    title: "DDC Collection Name",
+    thumbnailUrl: "your-thumbnail-url",
+    type: "ERC721",
   },
   // ... add more here
 ];
 ```
 
-### 3. Supported payment currencies
+## Marketplace Features (Future Version)
+The following features are planned for future marketplace functionality:
 
-thirdweb's MarketplaceV3 contract allows you to buy and sell NFTs in multiple currencies (ERC20 tokens) rather than just the native tokens like ETH, AVAX, MATIC etc.
+### Planned Features
+- Create listings with custom payment currencies
+- Buy and sell DDCs on the marketplace
+- Support for multiple payment tokens
+- Public profile pages with trading history
 
-If you want to support (or restrict) a only a few selected currencies for your marketplace, you need to do that via thirdweb Dashboard > you marketplace contract > Permission > Asset.
-
-Once that is done, head over to the file [`./src/consts/supported_tokens.ts`](./src/consts/supported_tokens.ts) and fill in some basic info of those tokens that you aim to support. For example, the code below will add a dropdown to the UI for USDC and USDT, on the Avalanche Fuji network:
-
-```typescript
-export const SUPPORTED_TOKENS: SupportedTokens[] = [
-  {
-    chain: avalancheFuji,
-    tokens: [
-      {
-        tokenAddress: "0x5425890298aed601595a70ab815c96711a31bc65",
-        symbol: "USDC",
-        icon: "/erc20-icons/usdc.png",
-      },
-      {
-        tokenAddress: "0x82dcec6aa3c8bfe2c96d40d8805ee0da15708643",
-        symbol: "USDT",
-        icon: "/erc20-icons/usdt.png",
-      },
-      // Add more ERC20 here...
-    ],
-  },
-]
-```
-You have to prepare your own icon assets for each token in this list.
+### Marketplace Configuration (Future)
+When marketplace features are implemented, you will need to:
+1. Deploy a [MarketplaceV3 contract](https://thirdweb.com/thirdweb.eth/MarketplaceV3)
+2. Configure supported payment tokens
+3. Set up marketplace contracts in [`/src/consts/marketplace_contracts.ts`](/src/consts/marketplace_contract.ts)
 
 ## Support
 
-For help or feedback, please [visit our support site](https://thirdweb.com/support)
+For technical support, please create an issue in this repository.
+
+For thirdweb-related questions, visit [thirdweb support](https://thirdweb.com/support)
 
 ## Additional Resources
 
-- [Documentation](https://portal.thirdweb.com/typescript/v5)
+- [thirdweb Documentation](https://portal.thirdweb.com/typescript/v5)
 
 ## Security
 
-If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `security@thirdweb.com`.
+If you believe you have found a security vulnerability, please email `security@yourdiamonds.com`.
 
