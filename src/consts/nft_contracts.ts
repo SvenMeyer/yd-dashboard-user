@@ -1,5 +1,6 @@
 import type { Chain } from "thirdweb";
 import { polygonAmoy, sepolia } from "./chains";
+import { baseSepolia } from "thirdweb/chains";
 
 export type NftContract = {
   address: string;
@@ -19,18 +20,17 @@ export type NftContract = {
 export const NFT_CONTRACTS: NftContract[] = [
 
   {
-    address: "0x8c11e104DAf21d4A6faEFfec36BCa3310ACC9D6F",
-    chain: sepolia,
-    title: "DDC 15-Sep-24 (sepolia-8c11)",
+    address: "0x0b46CEC2fa88c565053150904dbB7a634069A2E1",
+    chain: baseSepolia,
+    title: "0xb46 - Base Sepolia - Mar-18-2025",
     thumbnailUrl:
       "https://yourdiamonds.com/wp-content/uploads/2022/05/42-1920.jpg",
     type: "ERC721",
   },
-
   {
-    address: "0x19f46d5d67183b8496161af451f00e0f2d4bc161",
+    address: "0xb4D87b26750a4ed23fBa9239F7C69F9a810a5DF8",
     chain: sepolia,
-    title: "DDC 28-Apr-24(sepolia-19f4)",
+    title: "0xb4D8 - Sepolia - Mar-08-2025",
     thumbnailUrl:
       "https://yourdiamonds.com/wp-content/uploads/2022/05/42-1920.jpg",
     type: "ERC721",

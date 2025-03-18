@@ -52,7 +52,6 @@ const colorMap: Record<string, number> = {
 const clarityMap: Record<string, number> = {
   'UNDEFINED': 0,
   'FL': 1,    // Flawless
-  'Flawless': 1,    // Flawless
   'IF': 2,    // Internally Flawless
   'VVS1': 3,  // Very Very Slightly Included 1
   'VVS2': 4,  // Very Very Slightly Included 2

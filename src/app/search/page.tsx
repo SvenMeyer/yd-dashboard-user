@@ -1,58 +1,121 @@
 "use client";
 
-import { useState } from "react";
+import { useState, KeyboardEvent, useEffect } from "react";
 import { NFT_CONTRACTS } from "@/consts/nft_contracts";
 import { SearchResult } from "@/components/search/SearchResult";
-import { Alert, AlertIcon, Box, Flex, Input, Button } from "@chakra-ui/react";
-import { StringToUint256 } from "@/lib/utils";
+import { Alert, AlertIcon, Box, Flex, Input, Button, Text } from "@chakra-ui/react";
+import { ClientLayout } from "@/components/shared/ClientLayout";
+import { useSearchParams } from 'next/navigation';
+import { stringToTokenId } from '@/lib/mapping-tokenId-string';
 
 export default function SearchPage() {
   const [tokenId_String, setTokenId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const selectedCollection = NFT_CONTRACTS[0];
+  const searchParams = useSearchParams();
+  
+  // Handle URL parameters on page load
+  useEffect(() => {
+    const tokenIdParam = searchParams.get('tokenId');
+    if (tokenIdParam) {
+      setTokenId(tokenIdParam);
+      // Don't search immediately to avoid showing incorrect results
+      // while the page is still loading
+      setTimeout(() => {
+        setIsSearching(true);
+      }, 100);
+    }
+  }, [searchParams]);
 
   const handleSearch = () => {
-    if (tokenId_String) {
+    // Trim whitespace from the token ID input
+    const trimmedTokenId = tokenId_String.trim();
+    if (!trimmedTokenId) {
+      return;
+    }
+    
+    // Validate that the token ID can be converted to a uint256
+    try {
+      const tokenIdUint256 = stringToTokenId(trimmedTokenId);
+      console.log('Searching for token ID:', {
+        original: trimmedTokenId,
+        uint256: tokenIdUint256.toString()
+      });
+      
+      setTokenId(trimmedTokenId); // Update the state with trimmed value
+      setError(null);
       setIsSearching(true);
+    } catch (err) {
+      console.error('Error converting token ID:', err);
+      setError('Invalid token ID format. Must contain at least one digit.');
+      setIsSearching(false);
+    }
+  };
+  
+  // Handle Enter key press in the input field
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
   return (
-    <Flex height="100vh" flexDirection="column" alignItems="center" pt="10vh">
-      <Box width="120%" maxWidth="700px" mb={8}>
-        <Flex>
-          <Input 
-            placeholder="Enter Token ID" 
-            value={tokenId_String} 
-            onChange={(e) => setTokenId(e.target.value)}
-            mr={2}
-          />
-          <Button onClick={handleSearch}>Search</Button>
-        </Flex>
-      </Box>
-
-      {!isSearching && (
-        <Box width="120%" maxWidth="700px" mb={16}>
-          <Alert 
-            status="info" 
-            borderRadius="lg" 
-            height="auto" 
-            py={4}
-            fontSize="lg"
-            display="flex"
-            justifyContent="center"
-          >
-            <Flex alignItems="center">
-              <AlertIcon boxSize={6} mr={3} />
-              Enter a Token ID to search for a DDC NFT.
+    <ClientLayout>
+      <Flex height="100vh" flexDirection="column" alignItems="center" pt="10vh">
+        <Box width="120%" maxWidth="700px" mb={8}>
+          <Flex direction="column">
+            <Flex>
+              <Input 
+                placeholder="Enter Token ID (e.g. IGI-11111111)" 
+                value={tokenId_String} 
+                onChange={(e) => {
+                  setTokenId(e.target.value);
+                  // Reset the search when input changes
+                  if (isSearching) {
+                    setIsSearching(false);
+                  }
+                  // Clear any errors
+                  if (error) {
+                    setError(null);
+                  }
+                }}
+                onKeyPress={handleKeyPress}
+                mr={2}
+              />
+              <Button onClick={handleSearch}>Search</Button>
             </Flex>
-          </Alert>
+            {error && (
+              <Text color="red.500" fontSize="sm" mt={2}>
+                {error}
+              </Text>
+            )}
+          </Flex>
         </Box>
-      )}
 
-      {isSearching && (
-        <SearchResult tokenId={StringToUint256(tokenId_String)} selectedCollection={selectedCollection} />
-      )}
-    </Flex>
+        {!isSearching && !error && (
+          <Box width="120%" maxWidth="700px" mb={16}>
+            <Alert 
+              status="info" 
+              borderRadius="lg" 
+              height="auto" 
+              py={4}
+              fontSize="lg"
+              display="flex"
+              justifyContent="center"
+            >
+              <Flex alignItems="center">
+                <AlertIcon boxSize={6} mr={3} />
+                Enter a Token ID to search for a DDC NFT.
+              </Flex>
+            </Alert>
+          </Box>
+        )}
+
+        {isSearching && tokenId_String && (
+          <SearchResult tokenId={tokenId_String} selectedCollection={selectedCollection} />
+        )}
+      </Flex>
+    </ClientLayout>
   );
 }

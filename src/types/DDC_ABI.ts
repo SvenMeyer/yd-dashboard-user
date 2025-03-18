@@ -179,7 +179,7 @@ export const DDC_ABI = [
     },
     {
       "inputs": [],
-      "name": "FailedInnerCall",
+      "name": "FailedCall",
       "type": "error"
     },
     {
@@ -275,6 +275,12 @@ export const DDC_ABI = [
         }
       ],
       "name": "BatchMetadataUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "ContractURIUpdated",
       "type": "event"
     },
     {
@@ -418,6 +424,19 @@ export const DDC_ABI = [
     },
     {
       "inputs": [],
+      "name": "DATA_APPEND_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "DEFAULT_ADMIN_ROLE",
       "outputs": [
         {
@@ -466,6 +485,52 @@ export const DDC_ABI = [
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_filename",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_fileHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "appendFileData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_filenames",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_fileHashes",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "appendMultipleFileData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -521,9 +586,9 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         }
       ],
       "name": "buildMetadata",
@@ -551,25 +616,6 @@ export const DDC_ABI = [
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_bytes32",
-          "type": "bytes32"
-        }
-      ],
-      "name": "bytes32ToString",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "contractURI",
       "outputs": [
@@ -585,9 +631,9 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         }
       ],
       "name": "exists",
@@ -623,9 +669,9 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         }
       ],
       "name": "getDDCBytes32",
@@ -642,9 +688,9 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         }
       ],
       "name": "getDDCStruct",
@@ -698,6 +744,182 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
+          "internalType": "string",
+          "name": "_tokenIdStr",
+          "type": "string"
+        }
+      ],
+      "name": "getDDCStructString",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "microCarat",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16",
+              "name": "color",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "clarity",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "cut",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "fluo",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "polish",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "sym",
+              "type": "uint16"
+            }
+          ],
+          "internalType": "struct DDC.DDCProperties",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFileData",
+      "outputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "filenames",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "fileHashes",
+          "type": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFileDataAt",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "filename",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "fileHash",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_tokenIdStr",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFileDataAtString",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "filenameStr",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "fileHashStr",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFileDataCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_tokenIdStr",
+          "type": "string"
+        }
+      ],
+      "name": "getFileDataCountString",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "bytes32",
           "name": "role",
           "type": "bytes32"
@@ -712,6 +934,19 @@ export const DDC_ABI = [
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getVersion",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "API_VERSION",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -892,9 +1127,9 @@ export const DDC_ABI = [
           "type": "address"
         },
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         },
         {
           "internalType": "uint32",
@@ -950,9 +1185,9 @@ export const DDC_ABI = [
           "type": "address"
         },
         {
-          "internalType": "bytes32",
+          "internalType": "uint256",
           "name": "_tokenId",
-          "type": "bytes32"
+          "type": "uint256"
         },
         {
           "internalType": "bytes32",
@@ -965,7 +1200,65 @@ export const DDC_ABI = [
           "type": "string"
         }
       ],
-      "name": "safeMintBytes32",
+      "name": "safeMintPropertiesAsBytes32",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_tokenIdStr",
+          "type": "string"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_microCarat",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_color",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_clarity",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_cut",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_fluo",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_polish",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_sym",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "_uri",
+          "type": "string"
+        }
+      ],
+      "name": "safeMintString",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1055,54 +1348,20 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "_tokenId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_microCarat",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_color",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_clarity",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_cut",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_fluo",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_polish",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_sym",
-          "type": "uint8"
-        },
-        {
           "internalType": "string",
-          "name": "_uri",
+          "name": "_str",
           "type": "string"
         }
       ],
-      "name": "storeDDCStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "stringToUint256",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -1202,12 +1461,12 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "_tokenId",
-          "type": "bytes32"
+          "internalType": "string",
+          "name": "_tokenIdStr",
+          "type": "string"
         }
       ],
-      "name": "tokenURIBytes32",
+      "name": "tokenURIString",
       "outputs": [
         {
           "internalType": "string",
@@ -1257,6 +1516,25 @@ export const DDC_ABI = [
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "uint256ToString",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "newImplementation",
           "type": "address"
@@ -1299,17 +1577,17 @@ export const DDC_ABI = [
           "type": "address"
         }
       ],
-      "name": "walletOfOwnerBytes32",
+      "name": "walletOfOwnerString",
       "outputs": [
         {
-          "internalType": "bytes32[]",
+          "internalType": "string[]",
           "name": "",
-          "type": "bytes32[]"
+          "type": "string[]"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     }
   ]
-  
+    
 ];

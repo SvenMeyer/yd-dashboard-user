@@ -1,4 +1,3 @@
-# Digital Diamond Certificate (DDC) Platform
 
 <p align="center">
     <br />
@@ -6,9 +5,9 @@
     <br />
 </p>
 
-<h1 align="center">YourDiamonds DDC Platform</h1>
+# Digital Diamond Certificate (DDC) - User Website
 
-<p align="center"><strong>Access and manage your Digital Diamond Certificates powered by blockchain technology</strong></p>
+**Access and manage your Digital Diamond Certificates powered by blockchain technology**
 
 ## Features
 - View and verify your Digital Diamond Certificates

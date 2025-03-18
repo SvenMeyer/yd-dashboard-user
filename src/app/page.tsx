@@ -59,6 +59,8 @@ export default function Home() {
               src="/images/homepage-hero-diamond.png"
               alt="3D rendered diamond certificate with blockchain elements"
               className="rounded-lg shadow-xl"
+              width="50%"
+              mx="auto"
             />
           </Box>
         </Flex>

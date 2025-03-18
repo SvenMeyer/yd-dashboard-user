@@ -9,6 +9,7 @@ import DiamondPropertiesComponent from './DDC';
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { client } from "@/consts/client";
+import { StringToUint256 } from "@/lib/utils";
 
 export default function DDCPage() {
   // Destructure the parameters
@@ -16,6 +17,11 @@ export default function DDCPage() {
   const [chainId, contractAddress, _, tokenId] = params.params || [];
 
   console.log({chainId, contractAddress, tokenId});
+  
+  // Convert tokenId to uint256 if it's not already in that format
+  const tokenIdUint256 = tokenId && !tokenId.startsWith('0x') 
+    ? StringToUint256(tokenId)
+    : BigInt(tokenId as string);
 
   const contract = getContract({
     client,
@@ -25,8 +31,8 @@ export default function DDCPage() {
 
   const { data: ddcData, isLoading, error } = useReadContract({
     contract,
-    method: "function getDDCStruct(bytes32 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
-    params: [tokenId as `0x${string}`],
+    method: "function getDDCStruct(uint256 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
+    params: [tokenIdUint256],
   });
 
   console.log({ddcData});

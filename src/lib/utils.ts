@@ -5,6 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Keeping these functions for backward compatibility and transition
 export function uint256ToBytes32(id: bigint): `0x${string}` {
   return `0x${id.toString(16).padStart(64, '0')}`;
 }
@@ -21,22 +22,26 @@ export function bytes32ToUint256(bytes32: string): bigint {
   return BigInt(`0x${hexString}`);
 }
 
-export function stringToBytes32(str: string): `0x${string}` {
+// Updated to work with uint256 instead of bytes32
+export function stringToUint256(str: string): bigint {
   const encoder = new TextEncoder();
   const encoded = encoder.encode(str);
   const paddedArray = new Uint8Array(32);
   paddedArray.set(encoded);
-  return ('0x' + Array.from(paddedArray)
+  const hexString = Array.from(paddedArray)
     .map(b => b.toString(16).padStart(2, '0'))
-    .join('')) as `0x${string}`;
+    .join('');
+  return BigInt(`0x${hexString}`);
 }
 
-export function bytes32ToString(bytes32: string): string {
-  if (!bytes32.startsWith('0x') || bytes32.length !== 66) {
-    throw new Error('Invalid bytes32 string');
-  }
-  
-  const hexString = bytes32.slice(2);
+// Legacy function for backward compatibility
+export function stringToBytes32(str: string): `0x${string}` {
+  const value = stringToUint256(str);
+  return uint256ToBytes32(value);
+}
+
+export function uint256ToString(value: bigint): string {
+  const hexString = value.toString(16).padStart(64, '0');
   const bytes = new Uint8Array(32);
   for (let i = 0; i < 32; i++) {
     bytes[i] = parseInt(hexString.slice(i * 2, i * 2 + 2), 16);
@@ -46,12 +51,22 @@ export function bytes32ToString(bytes32: string): string {
   return decoder.decode(bytes).replace(/\0+$/, '');
 }
 
+// Legacy function for backward compatibility
+export function bytes32ToString(bytes32: string): string {
+  if (!bytes32.startsWith('0x') || bytes32.length !== 66) {
+    throw new Error('Invalid bytes32 string');
+  }
+  
+  const hexString = bytes32.slice(2);
+  const value = BigInt(`0x${hexString}`);
+  return uint256ToString(value);
+}
+
+// Updated naming for clarity
 export function Uint256ToString(value: bigint): string {
-  const bytes32 = uint256ToBytes32(value);
-  return bytes32ToString(bytes32);
+  return uint256ToString(value);
 }
 
 export function StringToUint256(str: string): bigint {
-  const bytes32 = stringToBytes32(str);
-  return bytes32ToUint256(bytes32);
+  return stringToUint256(str);
 }

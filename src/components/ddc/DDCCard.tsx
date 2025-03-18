@@ -1,87 +1,123 @@
 import { useReadContract } from "thirdweb/react";
-import { Box, Image, Text, VStack, HStack } from "@chakra-ui/react";
-import type { ThirdwebContract } from "thirdweb";
+import { Box, Image, Text, VStack, HStack, Skeleton, SkeletonText } from "@chakra-ui/react";
+import { getContract } from "thirdweb";
+import { client } from "@/consts/client";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
-import { uint256ToBytes32, bytes32ToString, Uint256ToString } from "@/lib/utils";
+import { stringToTokenId } from "@/lib/mapping-tokenId-string";
+import { Link } from "@chakra-ui/react";
+import type { NftContract } from "@/consts/nft_contracts";
 
-type Props = {
-  tokenId: bigint;
-  contract: ThirdwebContract;
+type DDCCardProps = {
+  tokenId: string;
+  collection: NftContract;
+  ddcData?: any; // Optional, if not provided we'll fetch it
 };
 
-export function DDCCard({ tokenId, contract }: Props) {
-  const { data: ddcData, isLoading, error } = useReadContract({
-    contract,
-    method: "function getDDCStruct(bytes32 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
-    params: [uint256ToBytes32(tokenId)],
-  });
-
-  if (isLoading) return <Text>Loading Token ID: {bytes32ToString(uint256ToBytes32(tokenId))}</Text>;
-
-  if (error) {
-    return (
-      <Box borderWidth={1} borderRadius="lg" overflow="hidden" p={4}>
-        <Text>Invalid DDC ID: {tokenId}</Text>
-        <Text>Unable to retrieve DDC data</Text>
-      </Box>
-    );
+export function DDCCard({ tokenId, collection, ddcData: initialDdcData }: DDCCardProps) {
+  // Format the token ID for display (maybe show first/last few characters)
+  const displayTokenId = tokenId.length > 10 ? 
+    `${tokenId.slice(0, 6)}...${tokenId.slice(-4)}` : tokenId;
+  
+  // Convert string to uint256 using the mapping utility
+  let tokenIdUint256: bigint;
+  try {
+    // Use the stringToTokenId function for conversion
+    tokenIdUint256 = stringToTokenId(tokenId);
+    
+    console.log('Token ID conversion in DDCCard:', {
+      original: tokenId,
+      uint256: tokenIdUint256.toString()
+    });
+  } catch (err) {
+    console.error('Error converting token ID in DDCCard:', err);
+    // Provide a fallback
+    tokenIdUint256 = BigInt(0);
   }
-
-  const [microCarat, colorGrade, clarityGrade, cutGrade, fluorescence, polishGrade, symmetryGrade] = ddcData || [];
-
-  const {
-    color,
-    clarity,
-    cut,
-    fluorescence: fluorescenceGrade,
-    polish,
-    symmetry
-  } = reverseMappingDiamondProperties(
-    Number(colorGrade),
-    Number(clarityGrade),
-    Number(cutGrade),
-    Number(fluorescence),
-    Number(polishGrade),
-    Number(symmetryGrade)
-  );
-
+  
+  // Initialize contract
+  const contract = getContract({
+    address: collection.address,
+    chain: collection.chain,
+    client,
+  });
+  
+  // Fetch DDC data if not provided and not a test token
+  const { data: fetchedDdcData, isLoading, error: ddcError } = useReadContract({
+    contract,
+    method: "function getDDCStruct(uint256) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
+    params: [tokenIdUint256],
+    queryOptions: {
+      enabled: !initialDdcData && tokenIdUint256 !== BigInt(0),
+      retry: 2,
+    }
+  });
+  
+  // Log any errors for debugging
+  if (ddcError) {
+    console.error('Error fetching DDC data:', ddcError, 'for token ID:', tokenId, 'as uint256:', tokenIdUint256.toString());
+  }
+  
+  // Use provided data or fetched data - no mock data
+  const ddcData = initialDdcData || fetchedDdcData;
+  
+  // Fetch token URI for image
+  const { data: tokenURI, isLoading: isLoadingURI } = useReadContract({
+    contract,
+    method: "function tokenURI(uint256) returns (string)",
+    params: [tokenIdUint256],
+    queryOptions: {
+      enabled: tokenIdUint256 !== BigInt(0),
+    }
+  });
+  
   return (
-    <Box borderWidth={1} borderRadius="lg" overflow="hidden" width="300px">
-      <VStack spacing={4} align="center" p={4}>
-        <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
-        <Box width="256px" px={4}>
-          <VStack align="stretch" spacing={2}>
-            <Text fontWeight="bold" textAlign="center">Token ID: {Uint256ToString(tokenId)}</Text>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Carat:</Text>
-              <Text>{Number(microCarat)/1000000}</Text>
+    <Box
+      as={Link}
+      href={`/collection/${collection.chain.id}/${collection.address}/token/${tokenId}`}
+      _hover={{ textDecoration: "none" }}
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      p={4}
+      minW="200px"
+      maxW="300px"
+      bg="white"
+      boxShadow="md"
+    >
+      <VStack spacing={3} align="start">
+        <Text fontWeight="bold" fontSize="lg">DDC #{displayTokenId}</Text>
+        
+        {isLoading ? (
+          <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
+        ) : ddcData ? (
+          <>
+            <HStack w="100%" justifyContent="space-between">
+              <Text fontWeight="medium">Carat:</Text>
+              <Text>{ddcData[0] / 100}</Text>
             </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Color:</Text>
-              <Text>{color}</Text>
+            <HStack w="100%" justifyContent="space-between">
+              <Text fontWeight="medium">Color:</Text>
+              <Text>{ddcData[1]}</Text>
             </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Clarity:</Text>
-              <Text>{clarity}</Text>
+            <HStack w="100%" justifyContent="space-between">
+              <Text fontWeight="medium">Clarity:</Text>
+              <Text>{ddcData[2]}</Text>
             </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Cut:</Text>
-              <Text>{cut}</Text>
+            <HStack w="100%" justifyContent="space-between">
+              <Text fontWeight="medium">Cut:</Text>
+              <Text>{ddcData[3]}</Text>
             </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Fluorescence:</Text>
-              <Text>{fluorescenceGrade}</Text>
-            </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Polish:</Text>
-              <Text>{polish}</Text>
-            </HStack>
-            <HStack justify="space-between" spacing={4}>
-              <Text>Symmetry:</Text>
-              <Text>{symmetry}</Text>
-            </HStack>
+          </>
+        ) : ddcError ? (
+          // Show error message
+          <VStack align="start" spacing={2}>
+            <Text color="red.500">Error loading DDC data</Text>
+            <Text fontSize="xs" color="gray.500">Token ID: {tokenId}</Text>
+            <Text fontSize="xs" color="gray.500">Error: {ddcError.message}</Text>
           </VStack>
-        </Box>
+        ) : (
+          <Text color="red.500">Failed to load DDC data</Text>
+        )}
       </VStack>
     </Box>
   );

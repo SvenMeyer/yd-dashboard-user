@@ -21,7 +21,7 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../common";
+} from "../../common";
 
 export declare namespace DDC {
   export type DDCPropertiesStruct = {
@@ -56,22 +56,31 @@ export declare namespace DDC {
 export interface DDCInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "DATA_APPEND_ROLE"
       | "DEFAULT_ADMIN_ROLE"
       | "MINTER_ROLE"
       | "UPGRADER_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
+      | "appendFileData"
+      | "appendMultipleFileData"
       | "approve"
       | "balanceOf"
       | "baseURI"
       | "buildMetadata"
       | "burn"
-      | "bytes32ToString"
       | "contractURI"
       | "exists"
       | "getApproved"
       | "getDDCBytes32"
       | "getDDCStruct"
+      | "getDDCStructString"
+      | "getFileData"
+      | "getFileDataAt"
+      | "getFileDataAtString"
+      | "getFileDataCount"
+      | "getFileDataCountString"
       | "getRoleAdmin"
+      | "getVersion"
       | "grantRole"
       | "hasRole"
       | "initialize"
@@ -82,23 +91,25 @@ export interface DDCInterface extends Interface {
       | "renounceRole"
       | "revokeRole"
       | "safeMint"
-      | "safeMintBytes32"
+      | "safeMintPropertiesAsBytes32"
+      | "safeMintString"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "setBaseURI"
-      | "storeDDCStruct"
+      | "stringToUint256"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
       | "tokenOfOwnerByIndex"
       | "tokenURI"
-      | "tokenURIBytes32"
+      | "tokenURIString"
       | "totalSupply"
       | "transferFrom"
+      | "uint256ToString"
       | "upgradeToAndCall"
       | "walletOfOwner"
-      | "walletOfOwnerBytes32"
+      | "walletOfOwnerString"
   ): FunctionFragment;
 
   getEvent(
@@ -106,6 +117,7 @@ export interface DDCInterface extends Interface {
       | "Approval"
       | "ApprovalForAll"
       | "BatchMetadataUpdate"
+      | "ContractURIUpdated"
       | "Initialized"
       | "MetadataUpdate"
       | "RoleAdminChanged"
@@ -115,6 +127,10 @@ export interface DDCInterface extends Interface {
       | "Upgraded"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "DATA_APPEND_ROLE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
@@ -132,6 +148,14 @@ export interface DDCInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "appendFileData",
+    values: [BigNumberish, BytesLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "appendMultipleFileData",
+    values: [BigNumberish, BytesLike[], BytesLike[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
   ): string;
@@ -142,33 +166,60 @@ export interface DDCInterface extends Interface {
   encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "buildMetadata",
-    values: [BytesLike]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "bytes32ToString",
-    values: [BytesLike]
-  ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "exists", values: [BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: "exists",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getDDCBytes32",
-    values: [BytesLike]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getDDCStruct",
-    values: [BytesLike]
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDDCStructString",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFileData",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFileDataAt",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFileDataAtString",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFileDataCount",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFileDataCountString",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVersion",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "grantRole",
@@ -207,7 +258,7 @@ export interface DDCInterface extends Interface {
     functionFragment: "safeMint",
     values: [
       AddressLike,
-      BytesLike,
+      BigNumberish,
       BigNumberish,
       BigNumberish,
       BigNumberish,
@@ -219,8 +270,23 @@ export interface DDCInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "safeMintBytes32",
-    values: [AddressLike, BytesLike, BytesLike, string]
+    functionFragment: "safeMintPropertiesAsBytes32",
+    values: [AddressLike, BigNumberish, BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "safeMintString",
+    values: [
+      AddressLike,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      string
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -236,18 +302,8 @@ export interface DDCInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "setBaseURI", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "storeDDCStruct",
-    values: [
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string
-    ]
+    functionFragment: "stringToUint256",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -267,8 +323,8 @@ export interface DDCInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "tokenURIBytes32",
-    values: [BytesLike]
+    functionFragment: "tokenURIString",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -279,6 +335,10 @@ export interface DDCInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "uint256ToString",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "upgradeToAndCall",
     values: [AddressLike, BytesLike]
   ): string;
@@ -287,10 +347,14 @@ export interface DDCInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "walletOfOwnerBytes32",
+    functionFragment: "walletOfOwnerString",
     values: [AddressLike]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "DATA_APPEND_ROLE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -307,6 +371,14 @@ export interface DDCInterface extends Interface {
     functionFragment: "UPGRADE_INTERFACE_VERSION",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "appendFileData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "appendMultipleFileData",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
@@ -315,10 +387,6 @@ export interface DDCInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "bytes32ToString",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
@@ -337,9 +405,34 @@ export interface DDCInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getDDCStructString",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFileData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFileDataAt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFileDataAtString",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFileDataCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFileDataCountString",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getVersion", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -360,7 +453,11 @@ export interface DDCInterface extends Interface {
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "safeMint", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "safeMintBytes32",
+    functionFragment: "safeMintPropertiesAsBytes32",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "safeMintString",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -377,7 +474,7 @@ export interface DDCInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "storeDDCStruct",
+    functionFragment: "stringToUint256",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -395,7 +492,7 @@ export interface DDCInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "tokenURIBytes32",
+    functionFragment: "tokenURIString",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -407,6 +504,10 @@ export interface DDCInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "uint256ToString",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
@@ -415,7 +516,7 @@ export interface DDCInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "walletOfOwnerBytes32",
+    functionFragment: "walletOfOwnerString",
     data: BytesLike
   ): Result;
 }
@@ -470,6 +571,16 @@ export namespace BatchMetadataUpdateEvent {
     _fromTokenId: bigint;
     _toTokenId: bigint;
   }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ContractURIUpdatedEvent {
+  export type InputTuple = [];
+  export type OutputTuple = [];
+  export interface OutputObject {}
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
   export type Log = TypedEventLog<Event>;
@@ -631,6 +742,8 @@ export interface DDC extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  DATA_APPEND_ROLE: TypedContractMethod<[], [string], "view">;
+
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
   MINTER_ROLE: TypedContractMethod<[], [string], "view">;
@@ -638,6 +751,18 @@ export interface DDC extends BaseContract {
   UPGRADER_ROLE: TypedContractMethod<[], [string], "view">;
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
+
+  appendFileData: TypedContractMethod<
+    [_tokenId: BigNumberish, _filename: BytesLike, _fileHash: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
+  appendMultipleFileData: TypedContractMethod<
+    [_tokenId: BigNumberish, _filenames: BytesLike[], _fileHashes: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
 
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
@@ -649,27 +774,71 @@ export interface DDC extends BaseContract {
 
   baseURI: TypedContractMethod<[], [string], "view">;
 
-  buildMetadata: TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+  buildMetadata: TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [string],
+    "view"
+  >;
 
   burn: TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
 
-  bytes32ToString: TypedContractMethod<[_bytes32: BytesLike], [string], "view">;
-
   contractURI: TypedContractMethod<[], [string], "view">;
 
-  exists: TypedContractMethod<[_tokenId: BytesLike], [boolean], "view">;
+  exists: TypedContractMethod<[_tokenId: BigNumberish], [boolean], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
-  getDDCBytes32: TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+  getDDCBytes32: TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [string],
+    "view"
+  >;
 
   getDDCStruct: TypedContractMethod<
-    [_tokenId: BytesLike],
+    [_tokenId: BigNumberish],
     [DDC.DDCPropertiesStructOutput],
     "view"
   >;
 
+  getDDCStructString: TypedContractMethod<
+    [_tokenIdStr: string],
+    [DDC.DDCPropertiesStructOutput],
+    "view"
+  >;
+
+  getFileData: TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [[string[], string[]] & { filenames: string[]; fileHashes: string[] }],
+    "view"
+  >;
+
+  getFileDataAt: TypedContractMethod<
+    [_tokenId: BigNumberish, _index: BigNumberish],
+    [[string, string] & { filename: string; fileHash: string }],
+    "view"
+  >;
+
+  getFileDataAtString: TypedContractMethod<
+    [_tokenIdStr: string, _index: BigNumberish],
+    [[string, string] & { filenameStr: string; fileHashStr: string }],
+    "view"
+  >;
+
+  getFileDataCount: TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  getFileDataCountString: TypedContractMethod<
+    [_tokenIdStr: string],
+    [bigint],
+    "view"
+  >;
+
   getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
+
+  getVersion: TypedContractMethod<[], [bigint], "view">;
 
   grantRole: TypedContractMethod<
     [role: BytesLike, account: AddressLike],
@@ -716,7 +885,7 @@ export interface DDC extends BaseContract {
   safeMint: TypedContractMethod<
     [
       _to: AddressLike,
-      _tokenId: BytesLike,
+      _tokenId: BigNumberish,
       _microCarat: BigNumberish,
       _color: BigNumberish,
       _clarity: BigNumberish,
@@ -730,11 +899,28 @@ export interface DDC extends BaseContract {
     "nonpayable"
   >;
 
-  safeMintBytes32: TypedContractMethod<
+  safeMintPropertiesAsBytes32: TypedContractMethod<
     [
       _to: AddressLike,
-      _tokenId: BytesLike,
+      _tokenId: BigNumberish,
       _properties: BytesLike,
+      _uri: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  safeMintString: TypedContractMethod<
+    [
+      _to: AddressLike,
+      _tokenIdStr: string,
+      _microCarat: BigNumberish,
+      _color: BigNumberish,
+      _clarity: BigNumberish,
+      _cut: BigNumberish,
+      _fluo: BigNumberish,
+      _polish: BigNumberish,
+      _sym: BigNumberish,
       _uri: string
     ],
     [void],
@@ -766,21 +952,7 @@ export interface DDC extends BaseContract {
 
   setBaseURI: TypedContractMethod<[baseURI_: string], [void], "nonpayable">;
 
-  storeDDCStruct: TypedContractMethod<
-    [
-      _tokenId: BytesLike,
-      _microCarat: BigNumberish,
-      _color: BigNumberish,
-      _clarity: BigNumberish,
-      _cut: BigNumberish,
-      _fluo: BigNumberish,
-      _polish: BigNumberish,
-      _sym: BigNumberish,
-      _uri: string
-    ],
-    [void],
-    "nonpayable"
-  >;
+  stringToUint256: TypedContractMethod<[_str: string], [bigint], "view">;
 
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
@@ -800,7 +972,7 @@ export interface DDC extends BaseContract {
 
   tokenURI: TypedContractMethod<[_tokenId: BigNumberish], [string], "view">;
 
-  tokenURIBytes32: TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+  tokenURIString: TypedContractMethod<[_tokenIdStr: string], [string], "view">;
 
   totalSupply: TypedContractMethod<[], [bigint], "view">;
 
@@ -808,6 +980,12 @@ export interface DDC extends BaseContract {
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
     "nonpayable"
+  >;
+
+  uint256ToString: TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [string],
+    "view"
   >;
 
   upgradeToAndCall: TypedContractMethod<
@@ -818,7 +996,7 @@ export interface DDC extends BaseContract {
 
   walletOfOwner: TypedContractMethod<[_owner: AddressLike], [bigint[]], "view">;
 
-  walletOfOwnerBytes32: TypedContractMethod<
+  walletOfOwnerString: TypedContractMethod<
     [_owner: AddressLike],
     [string[]],
     "view"
@@ -828,6 +1006,9 @@ export interface DDC extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "DATA_APPEND_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
@@ -840,6 +1021,20 @@ export interface DDC extends BaseContract {
   getFunction(
     nameOrSignature: "UPGRADE_INTERFACE_VERSION"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "appendFileData"
+  ): TypedContractMethod<
+    [_tokenId: BigNumberish, _filename: BytesLike, _fileHash: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "appendMultipleFileData"
+  ): TypedContractMethod<
+    [_tokenId: BigNumberish, _filenames: BytesLike[], _fileHashes: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
@@ -855,35 +1050,69 @@ export interface DDC extends BaseContract {
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "buildMetadata"
-  ): TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+  ): TypedContractMethod<[_tokenId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "burn"
   ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "bytes32ToString"
-  ): TypedContractMethod<[_bytes32: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "contractURI"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "exists"
-  ): TypedContractMethod<[_tokenId: BytesLike], [boolean], "view">;
+  ): TypedContractMethod<[_tokenId: BigNumberish], [boolean], "view">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "getDDCBytes32"
-  ): TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+  ): TypedContractMethod<[_tokenId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "getDDCStruct"
   ): TypedContractMethod<
-    [_tokenId: BytesLike],
+    [_tokenId: BigNumberish],
     [DDC.DDCPropertiesStructOutput],
     "view"
   >;
   getFunction(
+    nameOrSignature: "getDDCStructString"
+  ): TypedContractMethod<
+    [_tokenIdStr: string],
+    [DDC.DDCPropertiesStructOutput],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getFileData"
+  ): TypedContractMethod<
+    [_tokenId: BigNumberish],
+    [[string[], string[]] & { filenames: string[]; fileHashes: string[] }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getFileDataAt"
+  ): TypedContractMethod<
+    [_tokenId: BigNumberish, _index: BigNumberish],
+    [[string, string] & { filename: string; fileHash: string }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getFileDataAtString"
+  ): TypedContractMethod<
+    [_tokenIdStr: string, _index: BigNumberish],
+    [[string, string] & { filenameStr: string; fileHashStr: string }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getFileDataCount"
+  ): TypedContractMethod<[_tokenId: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getFileDataCountString"
+  ): TypedContractMethod<[_tokenIdStr: string], [bigint], "view">;
+  getFunction(
     nameOrSignature: "getRoleAdmin"
   ): TypedContractMethod<[role: BytesLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "getVersion"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "grantRole"
   ): TypedContractMethod<
@@ -940,7 +1169,7 @@ export interface DDC extends BaseContract {
   ): TypedContractMethod<
     [
       _to: AddressLike,
-      _tokenId: BytesLike,
+      _tokenId: BigNumberish,
       _microCarat: BigNumberish,
       _color: BigNumberish,
       _clarity: BigNumberish,
@@ -954,12 +1183,30 @@ export interface DDC extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "safeMintBytes32"
+    nameOrSignature: "safeMintPropertiesAsBytes32"
   ): TypedContractMethod<
     [
       _to: AddressLike,
-      _tokenId: BytesLike,
+      _tokenId: BigNumberish,
       _properties: BytesLike,
+      _uri: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "safeMintString"
+  ): TypedContractMethod<
+    [
+      _to: AddressLike,
+      _tokenIdStr: string,
+      _microCarat: BigNumberish,
+      _color: BigNumberish,
+      _clarity: BigNumberish,
+      _cut: BigNumberish,
+      _fluo: BigNumberish,
+      _polish: BigNumberish,
+      _sym: BigNumberish,
       _uri: string
     ],
     [void],
@@ -995,22 +1242,8 @@ export interface DDC extends BaseContract {
     nameOrSignature: "setBaseURI"
   ): TypedContractMethod<[baseURI_: string], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "storeDDCStruct"
-  ): TypedContractMethod<
-    [
-      _tokenId: BytesLike,
-      _microCarat: BigNumberish,
-      _color: BigNumberish,
-      _clarity: BigNumberish,
-      _cut: BigNumberish,
-      _fluo: BigNumberish,
-      _polish: BigNumberish,
-      _sym: BigNumberish,
-      _uri: string
-    ],
-    [void],
-    "nonpayable"
-  >;
+    nameOrSignature: "stringToUint256"
+  ): TypedContractMethod<[_str: string], [bigint], "view">;
   getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
@@ -1031,8 +1264,8 @@ export interface DDC extends BaseContract {
     nameOrSignature: "tokenURI"
   ): TypedContractMethod<[_tokenId: BigNumberish], [string], "view">;
   getFunction(
-    nameOrSignature: "tokenURIBytes32"
-  ): TypedContractMethod<[_tokenId: BytesLike], [string], "view">;
+    nameOrSignature: "tokenURIString"
+  ): TypedContractMethod<[_tokenIdStr: string], [string], "view">;
   getFunction(
     nameOrSignature: "totalSupply"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -1044,6 +1277,9 @@ export interface DDC extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "uint256ToString"
+  ): TypedContractMethod<[_tokenId: BigNumberish], [string], "view">;
+  getFunction(
     nameOrSignature: "upgradeToAndCall"
   ): TypedContractMethod<
     [newImplementation: AddressLike, data: BytesLike],
@@ -1054,7 +1290,7 @@ export interface DDC extends BaseContract {
     nameOrSignature: "walletOfOwner"
   ): TypedContractMethod<[_owner: AddressLike], [bigint[]], "view">;
   getFunction(
-    nameOrSignature: "walletOfOwnerBytes32"
+    nameOrSignature: "walletOfOwnerString"
   ): TypedContractMethod<[_owner: AddressLike], [string[]], "view">;
 
   getEvent(
@@ -1077,6 +1313,13 @@ export interface DDC extends BaseContract {
     BatchMetadataUpdateEvent.InputTuple,
     BatchMetadataUpdateEvent.OutputTuple,
     BatchMetadataUpdateEvent.OutputObject
+  >;
+  getEvent(
+    key: "ContractURIUpdated"
+  ): TypedContractEvent<
+    ContractURIUpdatedEvent.InputTuple,
+    ContractURIUpdatedEvent.OutputTuple,
+    ContractURIUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "Initialized"
@@ -1160,6 +1403,17 @@ export interface DDC extends BaseContract {
       BatchMetadataUpdateEvent.InputTuple,
       BatchMetadataUpdateEvent.OutputTuple,
       BatchMetadataUpdateEvent.OutputObject
+    >;
+
+    "ContractURIUpdated()": TypedContractEvent<
+      ContractURIUpdatedEvent.InputTuple,
+      ContractURIUpdatedEvent.OutputTuple,
+      ContractURIUpdatedEvent.OutputObject
+    >;
+    ContractURIUpdated: TypedContractEvent<
+      ContractURIUpdatedEvent.InputTuple,
+      ContractURIUpdatedEvent.OutputTuple,
+      ContractURIUpdatedEvent.OutputObject
     >;
 
     "Initialized(uint64)": TypedContractEvent<
