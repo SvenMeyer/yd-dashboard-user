@@ -4,6 +4,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
 import { uint256ToBytes32, bytes32ToString, Uint256ToString } from "@/lib/utils";
 import { tokenIdToString } from "@/lib/mapping-tokenId-string";
+import { useEffect, useState } from "react";
 
 type Props = {
   tokenId: bigint;
@@ -11,18 +12,34 @@ type Props = {
 };
 
 export function DDCCard({ tokenId, contract }: Props) {
+  const [imageExists, setImageExists] = useState(false);
+  const tokenIdString = tokenIdToString(tokenId);
+  const specificImagePath = `/ddc/images/${tokenIdString}.png`;
+  const defaultImagePath = "/icons/diamond-icon-256x256-white-bg.png";
+
+  useEffect(() => {
+    // Check if the specific image exists
+    fetch(specificImagePath)
+      .then(response => {
+        setImageExists(response.ok);
+      })
+      .catch(() => {
+        setImageExists(false);
+      });
+  }, [specificImagePath]);
+
   const { data: ddcData, isLoading, error } = useReadContract({
     contract,
     method: "function getDDCStruct(uint256 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
     params: [tokenId],
   });
 
-  if (isLoading) return <Text>Loading Token ID: {tokenIdToString(tokenId)}</Text>;
+  if (isLoading) return <Text>Loading Token ID: {tokenIdString}</Text>;
 
   if (error) {
     return (
       <Box borderWidth={1} borderRadius="lg" overflow="hidden" p={4}>
-        <Text>Invalid DDC ID: {tokenIdToString(tokenId)}</Text>
+        <Text>Invalid DDC ID: {tokenIdString}</Text>
         <Text>Unable to retrieve DDC data</Text>
       </Box>
     );
@@ -49,10 +66,16 @@ export function DDCCard({ tokenId, contract }: Props) {
   return (
     <Box borderWidth={1} borderRadius="lg" overflow="hidden" width="300px">
       <VStack spacing={4} align="center" p={4}>
-        <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
+        <Image 
+          src={imageExists ? specificImagePath : defaultImagePath}
+          alt={`Diamond ${tokenIdString}`}
+          width="256px"
+          height="256px"
+          objectFit="contain"
+        />
         <Box width="256px" px={4}>
           <VStack align="stretch" spacing={2}>
-            <Text fontWeight="bold" textAlign="center">Token ID: {tokenIdToString(tokenId)}</Text>
+            <Text fontWeight="bold" textAlign="center">Token ID: {tokenIdString}</Text>
             <HStack justify="space-between" spacing={4}>
               <Text>Carat:</Text>
               <Text>{Number(microCarat)/1000000}</Text>
