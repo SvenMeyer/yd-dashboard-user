@@ -68,7 +68,7 @@ export function Navbar() {
           flex={1}
           px={4}
         >
-          {pathname !== "/" && menuItems.map((item) => (
+          {menuItems.map((item) => (
             <Button
               key={item.label}
               as={Link}

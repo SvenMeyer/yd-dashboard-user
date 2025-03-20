@@ -3,6 +3,7 @@ import { Box, Image, Text, VStack, HStack } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
 import { uint256ToBytes32, bytes32ToString, Uint256ToString } from "@/lib/utils";
+import { tokenIdToString } from "@/lib/mapping-tokenId-string";
 
 type Props = {
   tokenId: bigint;
@@ -12,16 +13,16 @@ type Props = {
 export function DDCCard({ tokenId, contract }: Props) {
   const { data: ddcData, isLoading, error } = useReadContract({
     contract,
-    method: "function getDDCStruct(bytes32 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
-    params: [uint256ToBytes32(tokenId)],
+    method: "function getDDCStruct(uint256 _tokenId) returns (uint32, uint16, uint16, uint16, uint16, uint16, uint16)",
+    params: [tokenId],
   });
 
-  if (isLoading) return <Text>Loading Token ID: {bytes32ToString(uint256ToBytes32(tokenId))}</Text>;
+  if (isLoading) return <Text>Loading Token ID: {tokenIdToString(tokenId)}</Text>;
 
   if (error) {
     return (
       <Box borderWidth={1} borderRadius="lg" overflow="hidden" p={4}>
-        <Text>Invalid DDC ID: {tokenId}</Text>
+        <Text>Invalid DDC ID: {tokenIdToString(tokenId)}</Text>
         <Text>Unable to retrieve DDC data</Text>
       </Box>
     );
@@ -51,7 +52,7 @@ export function DDCCard({ tokenId, contract }: Props) {
         <Image src="/icons/diamond-icon-256x256-white-bg.png" alt="Diamond icon" width={256} height={256} />
         <Box width="256px" px={4}>
           <VStack align="stretch" spacing={2}>
-            <Text fontWeight="bold" textAlign="center">Token ID: {Uint256ToString(tokenId)}</Text>
+            <Text fontWeight="bold" textAlign="center">Token ID: {tokenIdToString(tokenId)}</Text>
             <HStack justify="space-between" spacing={4}>
               <Text>Carat:</Text>
               <Text>{Number(microCarat)/1000000}</Text>
