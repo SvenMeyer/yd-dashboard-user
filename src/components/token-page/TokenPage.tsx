@@ -1,3 +1,5 @@
+"use client";
+
 import { client } from "@/consts/client";
 import {
   Accordion,
@@ -28,16 +30,16 @@ import {
 } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import { NftAttributes } from "./NftAttributes";
-import { CreateListing } from "./CreateListing";
+import { CreateListing } from "@/app/token-page/CreateListing";
 import { useMarketplaceContext } from "@/hooks/useMarketplaceContext";
 import dynamic from "next/dynamic";
 import { NftDetails } from "./NftDetails";
 import RelatedListings from "./RelatedListings";
 
-const CancelListingButton = dynamic(() => import("./CancelListingButton"), {
+const CancelListingButton = dynamic(() => import("@/app/token-page/CancelListingButton"), {
   ssr: false,
 });
-const BuyFromListingButton = dynamic(() => import("./BuyFromListingButton"), {
+const BuyFromListingButton = dynamic(() => import("@/app/token-page/BuyFromListingButton"), {
   ssr: false,
 });
 

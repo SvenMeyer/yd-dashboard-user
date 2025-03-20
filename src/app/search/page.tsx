@@ -5,21 +5,23 @@ import { NFT_CONTRACTS } from "@/consts/nft_contracts";
 import { SearchResult } from "@/components/search/SearchResult";
 import { Alert, AlertIcon, Box, Flex, Input, Button, Text } from "@chakra-ui/react";
 import { ClientLayout } from "@/components/shared/ClientLayout";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { stringToTokenId } from '@/lib/mapping-tokenId-string';
+import { useContract } from "@/contexts/ContractContext";
 
 export default function SearchPage() {
   const [tokenId_String, setTokenId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const selectedCollection = NFT_CONTRACTS[0];
+  const { selectedContract } = useContract();
   const searchParams = useSearchParams();
+  const router = useRouter();
   
   // Handle URL parameters on page load
   useEffect(() => {
-    const tokenIdParam = searchParams.get('tokenId');
-    if (tokenIdParam) {
-      setTokenId(tokenIdParam);
+    const idParam = searchParams.get('id');
+    if (idParam) {
+      setTokenId(idParam);
       // Don't search immediately to avoid showing incorrect results
       // while the page is still loading
       setTimeout(() => {
@@ -42,6 +44,9 @@ export default function SearchPage() {
         original: trimmedTokenId,
         uint256: tokenIdUint256.toString()
       });
+      
+      // Update URL with the search parameter
+      router.push(`/search?id=${trimmedTokenId}`);
       
       setTokenId(trimmedTokenId); // Update the state with trimmed value
       setError(null);
@@ -113,7 +118,7 @@ export default function SearchPage() {
         )}
 
         {isSearching && tokenId_String && (
-          <SearchResult tokenId={tokenId_String} selectedCollection={selectedCollection} />
+          <SearchResult tokenId={tokenId_String} selectedCollection={selectedContract} />
         )}
       </Flex>
     </ClientLayout>

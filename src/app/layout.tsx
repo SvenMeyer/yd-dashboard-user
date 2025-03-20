@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/shared/Providers";
 import '@/styles/globals.css';
+import { ContractProvider } from "@/contexts/ContractContext";
 
 export const metadata: Metadata = {
   title: "YourDiamonds DDC",
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <ContractProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </ContractProvider>
       </body>
     </html>
   );

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Box, Wrap, WrapItem, Text, Flex, Alert, AlertIcon } from "@chakra-ui/react";
+import { Box, Wrap, WrapItem, Text, Flex } from "@chakra-ui/react";
 import { client } from "@/consts/client";
 import { getContract } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
@@ -36,11 +38,6 @@ export function SearchResult({ tokenId, selectedCollection }: Props) {
       // Otherwise use the stringToTokenId function for conversion
       tokenIdUint256 = stringToTokenId(tokenIdStr);
     }
-    
-    console.log('Token ID conversion in SearchResult:', {
-      original: tokenId,
-      uint256: tokenIdUint256.toString()
-    });
   } catch (err) {
     console.error('Error converting token ID:', err);
     setError('Invalid token ID format');
@@ -62,56 +59,47 @@ export function SearchResult({ tokenId, selectedCollection }: Props) {
     if (!ownerLoading || ownerError || error) {
       setIsLoading(false);
     }
-    
-    if (ownerError) {
-      console.error('Error fetching token owner:', ownerError);
-      setError('Token not found or contract error');
-    }
   }, [ownerLoading, ownerError, error]);
 
   if (isLoading) {
-    return <Text fontSize="default" fontWeight="default" color="default">Searching for DDC ...</Text>;
+    return (
+      <Flex justify="center" width="100%">
+        <Text fontSize="md" px={4} py={2}>
+          Searching for DDC ...
+        </Text>
+      </Flex>
+    );
   }
 
   if (error) {
     return (
-      <Alert status="error" variant="subtle" borderRadius="md">
-        <AlertIcon />
-        <Text fontWeight="bold">{error}</Text>
-      </Alert>
+      <Flex justify="center" width="100%">
+        <Text fontSize="md" px={4} py={2}>
+          Invalid token ID format
+        </Text>
+      </Flex>
     );
   }
 
-  const isFound = tokenOwner !== undefined;
+  const isFound = tokenOwner !== undefined && !ownerError;
 
   return (
     <Box>
-      <Alert
-        status={isFound ? "success" : "error"}
-        variant="subtle"
-        borderRadius="md"
-        mb={4}
-      >
-        <Flex align="center" width="100%">
-          <AlertIcon />
-          <Text fontWeight="bold" mr={2}>
-            {isFound 
-              ? `DDC with Token ID ${tokenIdStr} found` 
-              : `DDC with Token ID ${tokenIdStr} not found`}
-          </Text>
-        </Flex>
-      </Alert>
-      
-      {isFound && (
+      {isFound ? (
         <Wrap spacing={6} justify="center" align="center">
           <WrapItem>
             <DDCCard 
-              tokenId={tokenIdStr}
-              collection={selectedCollection}
-              ddcData={null} // We'll fetch this data in the DDCCard component
+              tokenId={tokenIdUint256}
+              contract={contract}
             />
           </WrapItem>
         </Wrap>
+      ) : (
+        <Flex justify="center" width="100%">
+          <Text fontSize="md" px={4} py={2}>
+            No DDC found with ID: {tokenIdStr}
+          </Text>
+        </Flex>
       )}
     </Box>
   );
