@@ -25,7 +25,9 @@ export default function Home() {
       {/* Hero Section */}
       <Box className="bg-gray-50 py-20">
         <Flex 
-          className="container mx-auto px-4"
+          maxW="container.xl"
+          mx="auto"
+          px={4}
           direction={{ base: 'column', md: 'row' }}
           gap={12}
           align="center"
@@ -37,30 +39,14 @@ export default function Home() {
             <Text fontSize="lg" color="gray.600" mb={8}>
               Revolutionizing diamond certification through NFT technology. Each DDC represents a real-world diamond with verified authenticity and transparent ownership history.
             </Text>
-            <Flex gap={4} flexWrap="wrap">
-              {NFT_CONTRACTS.map((contract) => (
-                <Button
-                  key={contract.address}
-                  as={Link}
-                  href={`/collection/${contract.chain.id}/${contract.address}`}
-                  variant="outline"
-                  size="lg"
-                  borderWidth={2}
-                  _hover={{ bg: 'gray.50' }}
-                  fontWeight="normal"
-                >
-                  {contract.title}
-                </Button>
-              ))}
-            </Flex>
+
           </Box>
-          <Box flex="1">
+          <Box flex="1" display="flex" justifyContent="flex-end">
             <Image
               src="/images/homepage-hero-diamond.png"
               alt="3D rendered diamond certificate with blockchain elements"
               className="rounded-lg shadow-xl"
-              width="50%"
-              mx="auto"
+              width="75%"
             />
           </Box>
         </Flex>

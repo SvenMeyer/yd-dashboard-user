@@ -1,4 +1,5 @@
 import { createThirdwebClient, type ThirdwebClient } from "thirdweb";
+import { NFT_CONTRACTS } from "./nft_contracts";
 
 // Get the client ID from environment variables
 const clientId = process.env.NEXT_PUBLIC_TW_CLIENT_ID || "";
@@ -39,5 +40,12 @@ try {
   });
 }
 
-// Export the client and clientId
-export { client, clientId };
+// Get the default contract configuration
+const defaultContract = NFT_CONTRACTS[0];
+
+// Export only what's needed
+export { 
+  client, 
+  clientId,
+  defaultContract
+};

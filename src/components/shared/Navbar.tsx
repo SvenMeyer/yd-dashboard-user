@@ -8,12 +8,11 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
+  Image,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Image,
   useColorMode,
 } from "@chakra-ui/react";
 import { blo } from "blo";
@@ -29,6 +28,7 @@ import {
 import type { Wallet } from "thirdweb/wallets";
 import { SideMenu } from "./SideMenu";
 import { usePathname } from 'next/navigation';
+import { ChainSelector } from './ChainSelector';
 
 const menuItems = [
   { label: "Portfolio", href: "/portfolio" },
@@ -52,29 +52,15 @@ export function Navbar() {
         margin="0 auto"
         py="30px"
       >
-        <Box
-          as={Link}
-          href="/"
-          _hover={{ textDecoration: "none" }}
-          color="inherit"
-          lineHeight="1"
-          textAlign="center"
-        >
-          <Heading
-            fontSize="3xl"
-            fontWeight="extrabold"
-            mb="2px"
-          >
-            YourDiamonds DDC
-          </Heading>
-          <Heading
-            fontSize="md"
-            fontWeight="medium"
-          >
-            Digital Diamond Certificate
-          </Heading>
+        <Box as={Link} href="/" _hover={{ textDecoration: "none" }}>
+          <Image 
+            src="/images/YourDiamonds-logo-turquise-t-3-3.svg" 
+            alt="YourDiamonds Logo" 
+            height="60px"
+            objectFit="contain"
+          />
         </Box>
-        
+
         <Flex 
           display={{ lg: "flex", base: "none" }} 
           alignItems="center" 
@@ -82,7 +68,7 @@ export function Navbar() {
           flex={1}
           px={4}
         >
-          {menuItems.map((item) => (
+          {pathname !== "/" && menuItems.map((item) => (
             <Button
               key={item.label}
               as={Link}
@@ -101,7 +87,8 @@ export function Navbar() {
           ))}
         </Flex>
         
-        <Box>
+        <Flex gap={2} align="center">
+          <ChainSelector />
           <ConnectButton
             client={client}
             connectModal={{
@@ -110,7 +97,7 @@ export function Navbar() {
             theme={colorMode}
             connectButton={{ style: { height: "56px" } }}
           />
-        </Box>
+        </Flex>
         <Box display={{ lg: "none", base: "block" }}>
           <SideMenu />
         </Box>
