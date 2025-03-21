@@ -1,5 +1,5 @@
 import { useReadContract } from "thirdweb/react";
-import { Box, Image, Text, VStack, HStack } from "@chakra-ui/react";
+import { Box, Image as ChakraImage, Text, VStack, HStack } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { reverseMappingDiamondProperties } from "@/lib/property-mapping";
 import { uint256ToBytes32, bytes32ToString, Uint256ToString } from "@/lib/utils";
@@ -18,14 +18,17 @@ export function DDCCard({ tokenId, contract }: Props) {
   const defaultImagePath = "/icons/diamond-icon-256x256-white-bg.png";
 
   useEffect(() => {
-    // Check if the specific image exists
-    fetch(specificImagePath)
-      .then(response => {
-        setImageExists(response.ok);
-      })
-      .catch(() => {
-        setImageExists(false);
-      });
+    // Create a new Image object to check if the specific image exists
+    const img = new window.Image();
+    img.onload = () => setImageExists(true);
+    img.onerror = () => setImageExists(false);
+    img.src = specificImagePath;
+
+    return () => {
+      // Cleanup
+      img.onload = null;
+      img.onerror = null;
+    };
   }, [specificImagePath]);
 
   const { data: ddcData, isLoading, error } = useReadContract({
@@ -66,7 +69,7 @@ export function DDCCard({ tokenId, contract }: Props) {
   return (
     <Box borderWidth={1} borderRadius="lg" overflow="hidden" width="300px">
       <VStack spacing={4} align="center" p={4}>
-        <Image 
+        <ChakraImage 
           src={imageExists ? specificImagePath : defaultImagePath}
           alt={`Diamond ${tokenIdString}`}
           width="256px"
